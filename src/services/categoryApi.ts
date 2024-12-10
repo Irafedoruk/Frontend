@@ -7,7 +7,7 @@ export const categoryApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: `http://localhost:5126/api` }),
     endpoints: (builder) => ({
         getCategories: builder.query<ICategoryItem[], void>({
-            query: () => 'categories',
+            query: () => 'category',
         }),
         // addPost: builder.mutation({
         //     query: (newPost) => ({

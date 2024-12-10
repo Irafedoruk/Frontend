@@ -2,20 +2,20 @@ export interface ICategoryItem {
     id: number;
     name: string;
     description: string;
-    image: string;
+    imageCategory: string;
 }
 
 export interface ICategoryCreate {
     name: string;
     description: string;
-    image: File|null;
+    imageCategory: File|null;
 }
 
 export interface ICategoryEdit {
     id: number;
     name: string;
     description: string;
-    image: string;
+    imageCategory: string;
 }
 
 export interface ICategoryName {
