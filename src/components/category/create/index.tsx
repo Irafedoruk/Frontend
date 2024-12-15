@@ -4,7 +4,7 @@ import {Link, useNavigate} from "react-router-dom";
 import {useState} from "react";
 import {PlusOutlined} from '@ant-design/icons';
 import {RcFile, UploadChangeParam} from "antd/es/upload";
-import {http_common} from "../../../env";
+import {http_common} from "../../../env/index.ts";
 
 const CategoryCreatePage = () => {
 
@@ -15,15 +15,31 @@ const CategoryCreatePage = () => {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
 
-    const onSubmit = async(values: ICategoryCreate) => {
-        console.log("Send Data", values);
-        http_common.post<ICategoryCreate>("/api/categories", values,
-            {headers: {"Content-Type": "multipart/form-data"}})
-            .then(resp => {
-                console.log("Craete category", resp.data);
-                navigate('/');
-            })
-    }
+    // const onSubmit = async(values: ICategoryCreate) => {
+    //     console.log("Send Data", values);
+    //     http_common.post<ICategoryCreate>("/api/Category/create", values,
+    //         {headers: {"Content-Type": "multipart/form-data"}})
+    //         .then(resp => {
+    //             console.log("Craete category", resp.data);
+    //             navigate('/');
+    //         })
+    // }
+    const onSubmit = async (values: ICategoryCreate) => {
+        const formData = new FormData();
+        formData.append("name", values.name);
+        formData.append("imageCategory", values.imageCategory as File);
+    
+        try {
+            const response = await http_common.post("/api/Category/create", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+            console.log("Create category", response.data);
+            navigate('/');
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+    
 
     return (
         <>
@@ -49,9 +65,9 @@ const CategoryCreatePage = () => {
 
                 <div className="flex items-center col-span-2 gap-x-2">
                     <Form.Item
-                        name="image"
+                        name="imageCategory"
                         label="Фото"
-                        valuePropName="image"
+                        valuePropName="file"
                         getValueFromEvent={(e: UploadChangeParam) => {
                             const image = e?.fileList[0] as IUploadedFile;
                             return image?.originFileObj;
@@ -61,7 +77,7 @@ const CategoryCreatePage = () => {
                         <Upload
                             // showUploadList={{showPreviewIcon: false}}
                             beforeUpload={() => false}
-                            accept="image/*"
+                            accept="imageCategory/*"
                             onPreview={(file: UploadFile) => {
                                 if (!file.url && !file.preview) {
                                     file.preview = URL.createObjectURL(file.originFileObj as RcFile);

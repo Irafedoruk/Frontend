@@ -5,8 +5,8 @@ import {Route, Routes} from "react-router-dom";
 // import PostsList from "./components/post/list";
 import MainLayout from "./components/containers/default/index.tsx";
 import HomePage from "./components/home/index.tsx";
-import CategoryCreatePage from "./components/category/create";
-import CategoryEditPage from "./components/category/edit";
+import CategoryCreatePage from "./components/category/create/index.tsx";
+import CategoryEditPage from "./components/category/edit/index.tsx";
 // import ProductCreatePage from "./components/products/create";
 
 export default function App() {
