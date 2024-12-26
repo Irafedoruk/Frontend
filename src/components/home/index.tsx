@@ -10,7 +10,7 @@ import { useGetCategoriesQuery } from "../../services/categoryApi.ts";
 const HomePage = () => {
     const {data: list, /*error,*/ isLoading} = useGetCategoriesQuery();
 
-    const hamdleDelete = async (id: number) => {
+    const handleDelete = async (id: number) => {
         //console.log("Delete id", id);
         try {
             await http_common.delete("/api/categories/" + id);
@@ -48,7 +48,7 @@ const HomePage = () => {
                             <div className='flex justify-between items-center p-2 mt-6'>
                                 <DeleteDialog title={"Ви впевнені?"}
                                               description={`Дійсно бажаєте видалити '${item.name}'?`}
-                                              onSubmit={() => hamdleDelete(item.id)}/>
+                                              onSubmit={() => handleDelete(item.id)}/>
                                 <Link to={`/edit/${item.id}`} className="text-black-500 hover:text-purple-700">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-5">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487L19.5 7.125" />

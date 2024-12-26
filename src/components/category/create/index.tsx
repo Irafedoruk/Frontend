@@ -5,9 +5,11 @@ import {useState} from "react";
 import {PlusOutlined} from '@ant-design/icons';
 import {RcFile, UploadChangeParam} from "antd/es/upload";
 import {http_common} from "../../../env/index.ts";
+import { useGetCategoriesQuery } from "../../../services/categoryApi.ts";
 
 const CategoryCreatePage = () => {
 
+    const { refetch } = useGetCategoriesQuery();
     const navigate = useNavigate();
     const [form] = Form.useForm<ICategoryCreate>();
 
@@ -15,29 +17,30 @@ const CategoryCreatePage = () => {
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
 
-    // const onSubmit = async(values: ICategoryCreate) => {
-    //     console.log("Send Data", values);
-    //     http_common.post<ICategoryCreate>("/api/Category/create", values,
-    //         {headers: {"Content-Type": "multipart/form-data"}})
-    //         .then(resp => {
-    //             console.log("Craete category", resp.data);
-    //             navigate('/');
-    //         })
-    // }
     const onSubmit = async (values: ICategoryCreate) => {
-        const formData = new FormData();
-        formData.append("name", values.name);
-        formData.append("imageCategory", values.imageCategory as File);
-    
-        try {
-            const response = await http_common.post("/api/Category/create", formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
-            console.log("Create category", response.data);
-            navigate('/');
-        } catch (error) {
-            console.error("Error:", error);
-        }
+        // const formData = new FormData();
+        // formData.append("name", values.name);
+        // formData.append("imageCategory", values.imageCategory as File);    
+        // try {
+        //     const response = await http_common.post("/api/Category/create", formData, {
+        //         headers: { "Content-Type": "multipart/form-data" },
+        //     });
+        //     alert("Категорію успішно створено!");
+        //     console.log("Create category", response.data);
+        //     navigate('/');
+        // } catch (error) {
+        //     console.error("Помилка при створенні категорії:", error);
+        //     alert("Помилка при створенні категорії");
+        // }
+
+        console.log("Send Data", values);
+        http_common.post<ICategoryCreate>("/api/Category/create", values,
+            {headers: {"Content-Type": "multipart/form-data"}})
+            .then(resp => {
+                console.log("Create category", resp.data);
+                refetch();
+                navigate('/');
+            })
     };
     
 

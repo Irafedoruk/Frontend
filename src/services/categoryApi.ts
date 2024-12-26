@@ -8,6 +8,10 @@ export const categoryApi = createApi({
     endpoints: (builder) => ({
         getCategories: builder.query<ICategoryItem[], void>({
             query: () => 'category',
+            // Refetch when the page arg changes
+            forceRefetch({ currentArg, previousArg }) {
+                return currentArg !== previousArg
+            },
         }),
         // addPost: builder.mutation({
         //     query: (newPost) => ({
