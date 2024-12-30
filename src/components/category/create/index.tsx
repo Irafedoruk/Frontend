@@ -39,8 +39,14 @@ const CategoryCreatePage = () => {
             .then(resp => {
                 console.log("Create category", resp.data);
                 refetch();
-                navigate('/');
+                // Повідомлення про успіх
+                alert("Категорію успішно додано!");
+                navigate('/admin/categories'); // Перенаправлення на список категорій
             })
+            .catch((error) => {
+                console.error("Помилка при створенні категорії:", error);
+                alert("Помилка при створенні категорії");
+            });
     };
     
 
@@ -108,7 +114,7 @@ const CategoryCreatePage = () => {
                             type="primary" htmlType="submit">
                         Додати
                     </Button>
-                    <Link to={"/"}>
+                    <Link to={"/admin/categories"}>
                         <Button style={{margin: 10}} htmlType="button">
                             Скасувати
                         </Button>

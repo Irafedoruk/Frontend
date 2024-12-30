@@ -1,67 +1,85 @@
 // import {useEffect, useState} from "react";
 // import {ICategoryItem} from "./types.ts";
+
 import {Link} from "react-router-dom";
 // import {useGetPostsQuery} from "../../services/postApi.ts";
 import { API_URL, http_common } from "../../env/index.ts";
 import { DeleteDialog } from "../common/DeleteDialog.tsx";
 import Loader from "../common/Loader/index.tsx";
-import { useGetCategoriesQuery } from "../../services/categoryApi.ts";
+import { useGetCategoriesQuery, useDeleteCategoryMutation } from "../../services/categoryApi.ts";
 
-const HomePage = () => {
+const CategoriesListPage = () => {
+    const { refetch } = useGetCategoriesQuery();
     const {data: list, /*error,*/ isLoading} = useGetCategoriesQuery();
+    const [deleteCategory] = useDeleteCategoryMutation();
 
     const handleDelete = async (id: number) => {
-        //console.log("Delete id", id);
-        try {
-            await http_common.delete("/api/categories/" + id);
-            //setList(list.filter(item => item.id !== id));
-        } catch {
-            //toast
+        if (confirm("Ви впевнені, що хочете видалити цю категорію?")) {
+            try {
+                await deleteCategory(id).unwrap();
+                alert("Категорію успішно видалено");
+                refetch(); // Оновлення списку категорій
+            } catch (error) {
+                console.error("Помилка при видаленні категорії:", error);
+                alert("Помилка при видаленні категорії");
+            }
         }
-
-    }
+    };
 
     if (isLoading) return <Loader loading={isLoading} size={150} color={"#1f2937"}/>;
 
     return (
         <>
-            <h1 className={"text-center text-3xl font-bold tracking-tight text-gray-900 mb-2"}>Категорії</h1>
-            <div>
-                <Link to="/create"
-                      className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    Додати
-                </Link>
-            </div>
-            <div className='grid md:grid-cols-3 lg:grid-cols-4 gap-4'>
-                {list?.map(item =>
-                    <div
-                        key={item.id} // Додано key
-                        className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                        <a href="#">
-                        <img className="rounded-t-lg" src={`${API_URL}/images/300_${item.imageCategory}`} alt={item.name} />
-                        </a>
-                        <div className="p-5">
-                            <a href="#">
-                                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{item.name}</h5>
-                            </a>
-                            <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{item.description}</p>
-                            <div className='flex justify-between items-center p-2 mt-6'>
-                                <DeleteDialog title={"Ви впевнені?"}
-                                              description={`Дійсно бажаєте видалити '${item.name}'?`}
-                                              onSubmit={() => handleDelete(item.id)}/>
-                                <Link to={`/edit/${item.id}`} className="text-black-500 hover:text-purple-700">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-5">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487L19.5 7.125" />
-                                </svg>
+            <h1 className="text-2xl font-bold mb-4">Список категорій</h1>
+            <table className="table-auto w-full bg-white shadow-md rounded-lg">
+                <thead>
+                    <tr className="bg-gray-200">
+                        <th className="p-2 border">#</th>
+                        <th className="p-2 border">Зображення</th>
+                        <th className="p-2 border">Назва</th>
+                        <th className="p-2 border">Опис</th>
+                        <th className="p-2 border">Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {list?.map((category, index) => (
+                        <tr key={category.id} className="hover:bg-gray-100">
+                            <td className="p-2 border text-center">{index + 1}</td>
+                            <td className="p-2 border text-center">
+                                <img
+                                    src={`${API_URL}/images/300_${category.imageCategory}`}
+                                    alt={category.name}
+                                    className="h-16 w-16 object-cover rounded"
+                                />
+                            </td>
+                            <td className="p-2 border">{category.name}</td>
+                            <td className="p-2 border">{category.description}</td>
+                            <td className="p-2 border text-center space-x-2">
+                                <Link
+                                    to={`/admin/categories/view/${category.id}`}
+                                    className="text-blue-600 hover:text-blue-800"
+                                >
+                                    Переглянути
                                 </Link>
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </div>
-
+                                <Link
+                                    to={`/admin/categories/edit/${category.id}`}
+                                    className="text-yellow-600 hover:text-yellow-800"
+                                >
+                                    Редагувати
+                                </Link>
+                                <button
+                                    onClick={() => handleDelete(category.id)}
+                                    className="text-red-600 hover:text-red-800"
+                                >
+                                    Видалити
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </>
     );
 }
 
-export default HomePage;
+export default CategoriesListPage;

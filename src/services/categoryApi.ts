@@ -13,6 +13,12 @@ export const categoryApi = createApi({
                 return currentArg !== previousArg
             },
         }),
+        deleteCategory: builder.mutation<void, number>({
+            query: (id) => ({
+                url: `category/${id}`,
+                method: 'DELETE',
+            }),
+        }),
         // addPost: builder.mutation({
         //     query: (newPost) => ({
         //         url: 'categories',
@@ -23,4 +29,4 @@ export const categoryApi = createApi({
     }),
 });
 
-export const { useGetCategoriesQuery, /*useAddPostMutation*/ } = categoryApi;
+export const { useGetCategoriesQuery, useDeleteCategoryMutation /*useAddPostMutation*/ } = categoryApi;
