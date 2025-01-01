@@ -5,8 +5,11 @@ import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { RcFile, UploadChangeParam } from "antd/es/upload";
 import { API_URL, http_common } from "../../../env/index.ts";
+import { IUploadedFile } from "../create/types.ts";
+import { useGetCategoriesQuery } from "../../../services/categoryApi.ts";
 
 const CategoryEditPage = () => {
+    const { refetch } = useGetCategoriesQuery();
     const { id } = useParams();
     const navigate = useNavigate();
     const [form] = Form.useForm<ICategoryEdit>();
@@ -16,31 +19,35 @@ const CategoryEditPage = () => {
     const [previewTitle, setPreviewTitle] = useState("");
 
     const [file, setFile] = useState<UploadFile | null>(null);
-    const [currentImage, setCurrentImage] = useState<string | null>(null); // Зберігаємо поточну назву зображення
+    //const [currentImage, setCurrentImage] = useState<string | null>(null); // Зберігаємо поточну назву зображення
 
     const onSubmit = async (values: ICategoryEdit) => {
+        console.log("Send Data", values);
+        refetch();
         const formData = new FormData();
-        formData.append("id", id || ""); // ID категорії
+        formData.append("id", id!);
         formData.append("name", values.name);
-
-        if (file?.originFileObj) {
-            // Якщо вибрано нове зображення
-            formData.append("imageCategory", file.originFileObj as RcFile);
-        } else if (!file?.originFileObj && currentImage) {
-            // Якщо зображення не змінювалося
-            formData.append("currentImage", currentImage);
+    
+        if (file && file.originFileObj) {
+            // Якщо нове зображення завантажено
+            formData.append("imageCategory", file.originFileObj);
+        } else if (file && file.url) {
+            // Якщо зображення не змінювали
+            formData.append("currentImage", file.name);
         }
-
+    
         try {
             const response = await http_common.put("/api/Category", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
-            console.log("Category updated successfully:", response.data);
-            navigate("/"); // Повернення до списку категорій
+            console.log("Update category", response.data);
+            navigate("/admin/categories");
         } catch (error) {
-            console.error("Error updating category:", error);
+            console.error("Помилка при редагуванні категорії:", error);
+            alert("Помилка при редагуванні категорії");
         }
     };
+    
 
     useEffect(() => {
         // Завантажуємо дані категорії з бекенду
@@ -51,20 +58,16 @@ const CategoryEditPage = () => {
                 form.setFieldsValue({
                     ...data,
                 });
-                if (data.imageCategory) {
-                    setCurrentImage(data.imageCategory); // Зберігаємо поточне зображення
+                if(data.imageCategory) {
                     setFile({
-                        uid: "-1",
-                        name: data.name,
-                        status: "done",
-                        url: `${API_URL}/images/300_${data.imageCategory}`,
+                       uid: '-1',
+                       name: data.imageCategory,
+                       status: "done",
+                       url: `${API_URL}/images/300_${data.imageCategory}`
                     });
                 }
-            })
-            .catch((error) => {
-                console.error("Error fetching category:", error);
             });
-    }, [id, form]);
+    }, []);
 
     return (
         <>
@@ -87,11 +90,6 @@ const CategoryEditPage = () => {
                 <Form.Item
                     name="imageCategory"
                     label="Фото"
-                    valuePropName="imageCategory"
-                    getValueFromEvent={(e: UploadChangeParam) => {
-                        const imageCategory = e?.fileList[0];
-                        return imageCategory?.originFileObj;
-                    }}
                 >
                     <Upload
                         beforeUpload={() => false}
@@ -127,7 +125,7 @@ const CategoryEditPage = () => {
                     >
                         Зберегти
                     </Button>
-                    <Link to="/">
+                    <Link to="/admin/categories">
                         <Button style={{ margin: 10 }} htmlType="button">
                             Скасувати
                         </Button>

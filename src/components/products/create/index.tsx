@@ -5,7 +5,7 @@ import {RcFile, UploadChangeParam} from "antd/es/upload";
 import {PlusOutlined} from '@ant-design/icons';
 import {IProductCreate, IProductImageDesc} from '../../../interfaces/products';
 import {http_common} from "../../../env";
-import {ICategoryItem} from "../../home/types.ts";
+import {ICategoryItem} from "../../category/list/types.ts";
 import EditorTiny from "../../common/EditorTiny";
 
 // import Loader from '../../common/loader/Loader';

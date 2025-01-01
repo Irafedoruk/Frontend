@@ -4,13 +4,15 @@ import { Link, Outlet } from "react-router-dom";
 const AdminLayout = () => {
     const [openCategoryMenu, setOpenCategoryMenu] = useState(false);
     const [openProductMenu, setOpenProductMenu] = useState(false);
+    const [openSubCategoryMenu, setOpenSubCategoryMenu] = useState(false);
+
     return (
         <div className="flex h-screen">
             {/* Sidebar */}
             <div className="w-64 bg-gray-800 text-white">
                 <div className="p-4 text-xl font-bold">Dashboard</div>
                 <ul className="space-y-2 p-4">
-                    <li><Link to="/admin" className="hover:text-gray-400">Головна</Link></li>
+                    {/* <li><Link to="/admin" className="hover:text-gray-400">Головна</Link></li> */}
                     <li>
                         <div
                             onClick={() => setOpenCategoryMenu(!openCategoryMenu)}
@@ -29,6 +31,25 @@ const AdminLayout = () => {
                             </ul>
                         )}
                     </li>
+                    <li>
+                        <div
+                            onClick={() => setOpenSubCategoryMenu(!openSubCategoryMenu)}
+                            className="cursor-pointer hover:text-gray-400"
+                        >
+                            Підкатегорії
+                        </div>
+                        {openSubCategoryMenu && (
+                            <ul className="ml-4 mt-2 space-y-1">
+                                <li>
+                                    <Link to="/admin/subcategories" className="hover:text-gray-400">Список</Link>
+                                </li>
+                                <li>
+                                    <Link to="/admin/subcategories/create" className="hover:text-gray-400">Створення</Link>
+                                </li>
+                            </ul>
+                        )}
+                    </li>
+
                     <li>
                         <div
                             onClick={() => setOpenProductMenu(!openProductMenu)}
