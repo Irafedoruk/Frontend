@@ -17,25 +17,34 @@ const CategoryViewPage = () => {
             setCategory(categoryData);
         }
         if (subCategoryData) {
-            setSubCategories(subCategoryData);
+            // Фільтруємо підкатегорії, щоб показувати тільки ті, що належать поточній категорії
+            const filteredSubCategories = subCategoryData.filter((subCategory: any) => subCategory.categoryId === Number(id));
+            setSubCategories(filteredSubCategories);
         }
-    }, [categoryData, subCategoryData]);
+    }, [categoryData, subCategoryData, id]);
 
     if (categoryLoading || subCategoryLoading) return <Loader loading={true} size={150} color="#1f2937" />;
 
     return (
-        <div>
+        <div className="p-6">
             <h1 className="text-2xl font-bold mb-4">Інформація про категорію</h1>
 
             {category && (
                 <div className="mb-6">
-                    <h2 className="text-xl font-semibold">{category.name}</h2>
-                    <img
-                        src={`${API_URL}/images/300_${category.imageCategory}`}
-                        alt={category.name}
-                        className="h-32 w-32 object-cover rounded mb-4"
-                    />
-                    <p>{category.description}</p>
+                    <div className="mb-2">
+                        <span className="font-semibold">Назва:</span> {category.name}
+                    </div>
+                    <div className="mb-4">
+                        <span className="font-semibold">Опис:</span> {category.description}
+                    </div>
+                    <div className="mb-4">
+                        <span className="font-semibold">Зображення:</span>
+                        <img
+                            src={`${API_URL}/images/300_${category.imageCategory}`}
+                            alt={category.name}
+                            className="h-32 w-32 object-cover rounded mt-2"
+                        />
+                    </div>
                 </div>
             )}
 
@@ -43,13 +52,18 @@ const CategoryViewPage = () => {
             <ul>
                 {subCategories?.length > 0 ? (
                     subCategories.map((subCategory: any) => (
-                        <li key={subCategory.id} className="mb-4">
-                            <h3 className="text-lg font-medium">{subCategory.name}</h3>
-                            <img
-                                src={`${API_URL}/images/300_${subCategory.imageSubCategory}`}
-                                alt={subCategory.name}
-                                className="h-16 w-16 object-cover rounded"
-                            />
+                        <li key={subCategory.id} className="mb-4 p-4 border rounded-lg shadow-sm hover:bg-gray-50">
+                            <div className="mb-2">
+                                <span className="font-semibold">Назва підкатегорії:</span> {subCategory.name}
+                            </div>
+                            <div className="mb-2">
+                                <span className="font-semibold">Зображення підкатегорії:</span>
+                                <img
+                                    src={`${API_URL}/images/300_${subCategory.imageSubCategory}`}
+                                    alt={subCategory.name}
+                                    className="h-16 w-16 object-cover rounded mt-2"
+                                />
+                            </div>
                         </li>
                     ))
                 ) : (
