@@ -13,6 +13,7 @@ import SubCategoryCreatePage from "./components/subcategory/create/index.tsx";
 import SubCategoryEditPage from "./components/subcategory/edit/index.tsx";
 import SubCategoryListPage from "./components/subcategory/list/index.tsx";
 import ProductListPage from "./components/products/list/index.tsx";
+import ProductCreatePage from "./components/products/create/index.tsx";
 // import ProductCreatePage from "./components/products/create";
 
 export default function App() {
@@ -36,7 +37,7 @@ export default function App() {
                     {/* PRODUCTS */}
                     <Route path={"products"}>
                     <Route index element={<ProductListPage />} />
-                    {/* <Route path="create" element={<ProductCreatePage />} /> */}
+                    <Route path="create" element={<ProductCreatePage />} />
                     {/* <Route path="edit/:id" element={<ProductEditPage />} /> */}
                     {/* <Route path="details/:id" element={<ProductDetailPage />} /> */}
                     </Route>

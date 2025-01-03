@@ -4,6 +4,7 @@ import {FC} from "react";
 import { API_URL, http_common } from "../../../env";
 import { IProductImageDesc } from "../../../interfaces/products";
 
+
 //Властивості, які приймає компонент
 interface IEditorProps extends IAllProps {
     //тут міститься метод onEditorChange - який відслідковує зміни в едіторі
@@ -36,7 +37,7 @@ const EditorTiny: FC<IEditorProps> = ({
                 )}
             >
                 <Editor
-                    apiKey="l4ipj5d2e673xkfnuw4xjsxgaqqu4f45uf8qoh4az9o28mzr"
+                    apiKey="gjibnpw5dpc5bt3g8uf9vtqwa4hm488tinteolnt9fssnmd8"
                     // initialValue="<p>This is the initial content of the editor</p>"
                     init={{
                         height: 500, //висота самого інтупа
@@ -79,11 +80,11 @@ const EditorTiny: FC<IEditorProps> = ({
                             help: { title: "Help", items: "help" },
                         },
                         plugins: [
-                            "image",
-                            "advlist autolink lists link image imagetools charmap print preview anchor",
-                            "searchreplace visualblocks code fullscreen textcolor ",
-                            "insertdatetime media table paste code help wordcount",
-                        ],
+                            "advlist", "autolink", "lists", "link", "image", "imagetools", 
+                            "charmap", "print", "preview", "anchor", "searchreplace", 
+                            "visualblocks", "code", "fullscreen", "insertdatetime", 
+                            "media", "table", "paste", "help", "wordcount"
+                        ],                        
                         toolbar:
                             "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | forecolor backcolor ",
                         content_langs: [

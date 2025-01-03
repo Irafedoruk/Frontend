@@ -1,27 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useGetProductsQuery, useDeleteProductMutation } from "../../../services/productApi";
-import { API_URL } from "../../../env";
+import { API_URL, http_common } from "../../../env";
 import Loader from "../../common/Loader";
+import { IProductItem } from "../../../interfaces/products";
 
-const ProductListPage: React.FC = () => {
-    const { data: products, isLoading, refetch } = useGetProductsQuery();
-    const [deleteProduct] = useDeleteProductMutation();
+const ProductListPage = () => {
+    const [list, setList] = useState<IProductItem[]>([]);
+    //const { data: products, isLoading, refetch } = useGetProductsQuery();
+    //const [deleteProduct] = useDeleteProductMutation();
     const [subcategories, setSubCategories] = useState<{ id: number; name: string }[]>([]);
 
     const handleDelete = async (id: number) => {
         if (window.confirm("Ви впевнені, що хочете видалити цей товар?")) {
             try {
-                await deleteProduct(id).unwrap();
-                alert("Товар успішно видалено.");
-                refetch();
-            } catch (err) {
-                console.error("Помилка при видаленні товару:", err);
-                alert("Не вдалося видалити товар.");
+                await http_common.delete("/api/products/" + id);
+                setList(list.filter(item => item.id !== id));
+            } catch {
+                //toast
             }
         }
     };
-
+    useEffect(() => {
+        http_common.get<IProductItem[]>("/api/Products")
+            .then(resp => {
+                setList(resp.data);
+            });
+    }, []);
     useEffect(() => {
         // Завантаження підкатегорій для відображення
         fetch(`http://localhost:5126/api/SubCategory`)
@@ -30,8 +35,8 @@ const ProductListPage: React.FC = () => {
             .catch((err) => console.error("Помилка завантаження підкатегорій:", err));
     }, []);
 
-    if (isLoading) return <Loader loading={isLoading} size={150} color={"#1f2937"} />;
-    if (!products) return <div>Список продуктів відсутній.</div>;
+    //if (isLoading) return <Loader loading={isLoading} size={150} color={"#1f2937"} />;
+    //if (!products) return <div>Список продуктів відсутній.</div>;
 
     return (
         <>
@@ -49,18 +54,18 @@ const ProductListPage: React.FC = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {products.map((product, index) => (
+                    {list.map((product, index) => (
                         <tr key={product.id} className="hover:bg-gray-100">
                             <td className="p-2 border text-center">{index + 1}</td>
                             <td className="p-2 border text-center">
-                                {product.images && product.images.length > 0 ? (
+                                {product.images.length > 0 ? (
                                     <img
                                         src={`${API_URL}/images/300_${product.images[0]}`}
                                         alt={product.name}
                                         className="h-16 w-16 object-cover rounded"
                                     />
                                 ) : (
-                                    "Немає зображення"
+                                    <span>Зображення відсутнє</span>
                                 )}
                             </td>
                             <td className="p-2 border">{product.name}</td>

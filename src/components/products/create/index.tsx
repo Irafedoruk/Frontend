@@ -5,60 +5,104 @@ import {RcFile, UploadChangeParam} from "antd/es/upload";
 import {PlusOutlined} from '@ant-design/icons';
 import {IProductCreate, IProductImageDesc} from '../../../interfaces/products';
 import {http_common} from "../../../env";
-import {ICategoryItem} from "../../category/list/types.ts";
 import EditorTiny from "../../common/EditorTiny";
+import { ISubCategoryItem } from '../../subcategory/list/types';
+import { useGetProductsQuery } from '../../../services/productApi';
 
 // import Loader from '../../common/loader/Loader';
 
-export interface ICategoryName {
+export interface ISubCategoryName {
     id: number;
     name: string;
 }
 
 const ProductCreatePage = () => {
-
+    const { refetch } = useGetProductsQuery();
     const navigate = useNavigate();
     const [form] = Form.useForm<IProductCreate>();
     // const [loading, setLoading] = useState<boolean>(false);
 
-    const [categories, setCategories] = useState<ICategoryName[]>([]);
+    const [subcategories, setSubCategories] = useState<ISubCategoryName[]>([]);
     const [description, setDescription] = useState<string>("");
     const [descImages, setDescImages] = useState<IProductImageDesc[]>([]);
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
 
+    // useEffect(() => {
+    //         // Завантаження підкатегорій для відображення
+    //         fetch(`http://localhost:5126/api/SubCategory`)
+    //             .then((response) => response.json())
+    //             .then((data) => setSubCategories(data))
+    //             .catch((err) => console.error("Помилка завантаження підкатегорій:", err));
+    //     }, []);
     useEffect(() => {
-        http_common.get<ICategoryItem[]>("/api/Categories")
+        http_common.get<ISubCategoryItem[]>("/api/SubCategory")
             .then(resp => {
-                setCategories(resp.data);
+                setSubCategories(resp.data);
             });
     }, []);
 
+    // const onSubmit = async (values: IProductCreate) => {
+    //     // setLoading(true);
+    //     try {
+    //         console.log("Send Data:", values);
+    //         console.log("descImages list:", descImages);
+    //         const imagesDescIds = descImages.map((x) => {
+    //             return x.id;
+    //         })
+    //         const productData = { ...values, imagesDescIds };
+    //         http_common.post("/api/Product", productData,
+    //             {
+    //                 headers: { "Content-Type": "multipart/form-data" }
+    //             }).then(resp => {
+    //             console.log("Product created:", resp.data);
+    //             navigate(`/admin/products`);
+    //         });
+
+    //     } catch (error) {
+    //         console.error("Error creating product:", error);
+    //     } finally {
+    //         // setLoading(false);
+    //     }
+    // };
     const onSubmit = async (values: IProductCreate) => {
-        // setLoading(true);
-        try {
-            console.log("Send Data:", values);
-            console.log("descImages list:", descImages);
-            const imagesDescIds = descImages.map((x) => {
-                return x.id;
+        console.log("Send Data", values);
+        console.log("descImages list:", descImages);
+        // const imagesDescIds = descImages.map((x) => {
+        //     return x.id;
+        // })
+        //const productData = { ...values, imagesDescIds };
+        http_common.post<IProductCreate>("/api/Products/create", values,
+            {headers: {"Content-Type": "multipart/form-data"}})
+            .then(resp => {
+            console.log("Create product", resp.data);
+                refetch();                
+                alert("Товар успішно додано!");  // Повідомлення про успіх
+                navigate('/admin/products'); // Перенаправлення на список товарів
             })
-            const productData = { ...values, description, imagesDescIds };
-            http_common.post("/api/Products", productData,
-                {
-                    headers: { "Content-Type": "multipart/form-data" }
-                }).then(resp => {
-                console.log("Product created:", resp.data);
-                navigate(`/products`);
+            .catch((error) => {
+                console.error("Помилка при створенні товару:", error);
+                alert("Помилка при створенні товару");
             });
-
-        } catch (error) {
-            console.error("Error creating product:", error);
-        } finally {
-            // setLoading(false);
-        }
     };
-
+    // const onSubmit = async (values: ISubCategoryCreate) => {
+    //         console.log("Send Data", values);
+    //         http_common.post<ISubCategoryCreate>("/api/SubCategory/create", values,
+    //             {headers: {"Content-Type": "multipart/form-data"}})
+    //             .then(resp => {
+    //             console.log("Create subcategory", resp.data);
+    //                 refetch();
+    //                 // Повідомлення про успіх
+    //                 alert("Підкатегорію успішно додано!");
+    //                 navigate('/admin/subcategories'); // Перенаправлення на список категорій
+    //             })
+    //             .catch((error) => {
+    //                 console.error("Помилка при створенні підкатегорії:", error);
+    //                 alert("Помилка при створенні підкатегорії");
+    //             });
+    //     };
+    
     return (
 
         <>
@@ -106,18 +150,26 @@ const ProductCreatePage = () => {
                 <Form.Item name="subCategoryId" label="Subcategory" hasFeedback
                     rules={[{ required: true, message: 'Please choose a subcategory.' }]}>
                     <Select placeholder="Select a subcategory">
-                        {categories.map(c => (
+                        {subcategories.map(c => (
                             <Select.Option key={c.id} value={c.id}> {c.name}</Select.Option>
                         ))}
                     </Select>
                 </Form.Item>
-                <Form.Item name="images" label="Photo" valuePropName="Image"
+                <Form.Item 
+                    name="images" 
+                    label="Photo" 
+                    valuePropName="Image"
                            rules={[{required: true, message: "Please choose a photo for the product."}]}
                            getValueFromEvent={(e: UploadChangeParam) => {
                                return e?.fileList.map(file => file.originFileObj);
                            }}>
 
-                    <Upload beforeUpload={() => false} accept="image/*" maxCount={10} listType="picture-card" multiple
+                    <Upload 
+                        beforeUpload={() => false} 
+                        accept="image/*" 
+                        maxCount={10} 
+                        listType="picture-card" 
+                        multiple
                             onPreview={(file: UploadFile) => {
                                 if (!file.url && !file.preview) {
                                     file.preview = URL.createObjectURL(file.originFileObj as RcFile);
@@ -133,9 +185,27 @@ const ProductCreatePage = () => {
                             <div style={{marginTop: 8}}>Upload</div>
                         </div>
                     </Upload>
+                </Form.Item>                
+                <Form.Item name="description" label="Description" hasFeedback
+                            rules={[{ required: true, message: 'Please provide a product description.' }]}>
+                    {/* Якщо ви хочете використовувати просте поле вводу */}
+                    <Input.TextArea placeholder="Enter product description" rows={4} />
+    
+                    {/* Або для більш складного текстового редактора */}
+                    {/* <EditorTiny 
+                        value={description}
+                        label="Description"
+                        field="description"
+                        getSelectImage={(image: IProductImageDesc) => {
+                        setDescImages((prevImages) => [...prevImages, image]);
+                    }}
+                    onEditorChange={(text: string) => {
+                        setDescription(text);
+                    }}
+                    /> */}
                 </Form.Item>
-
-                <EditorTiny
+                
+                {/* <EditorTiny
                     value={description} //Значення, яке ми вводимо в поле
                     label="Опис" //Підпис для даного інпуту
                     field="description" //Назва інпуту
@@ -147,11 +217,11 @@ const ProductCreatePage = () => {
                         //console.log("Data set value", text);
                         setDescription(text); //Текст, який в середині інпуту, записуємо у формік в поле description
                     }}
-                />
+                /> */}
 
                 <Form.Item wrapperCol={{span: 10, offset: 10}}>
                     <Space>
-                        <Link to={"/products"}>
+                        <Link to={"/admin/products"}>
                             <Button htmlType="button"
                                     className='text-white bg-gradient-to-br from-red-400 to-purple-600 font-medium rounded-lg px-5'>Cancel</Button>
                         </Link>

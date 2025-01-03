@@ -21,7 +21,7 @@ export interface IProductCreate {
     code: string,
     name: string,
     price: number,
-    images: string[],
+    images: File[],
     manufacturer: string,
     size: string,
     color: string,
