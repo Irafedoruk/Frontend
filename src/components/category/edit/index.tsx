@@ -21,33 +21,40 @@ const CategoryEditPage = () => {
     const [file, setFile] = useState<UploadFile | null>(null);
     //const [currentImage, setCurrentImage] = useState<string | null>(null); // Зберігаємо поточну назву зображення
 
-    const onSubmit = async (values: ICategoryEdit) => {
+    // const onSubmit = async (values: ICategoryEdit) => {
+    //     console.log("Send Data", values);
+    //     refetch();
+    //     const formData = new FormData();
+    //     formData.append("id", id!);
+    //     formData.append("name", values.name);    
+    //     if (file && file.originFileObj) {
+    //         // Якщо нове зображення завантажено
+    //         formData.append("imageCategory", file.originFileObj);
+    //     } else if (file && file.url) {
+    //         // Якщо зображення не змінювали
+    //         formData.append("currentImage", file.name);
+    //     }    
+    //     try {
+    //         const response = await http_common.put("/api/Category", formData, {
+    //             headers: { "Content-Type": "multipart/form-data" },
+    //         });
+    //         console.log("Update category", response.data);
+    //         navigate("/admin/categories");
+    //     } catch (error) {
+    //         console.error("Помилка при редагуванні категорії:", error);
+    //         alert("Помилка при редагуванні категорії");
+    //     }
+    // };
+    const onSubmit = async(values: ICategoryEdit) => {
         console.log("Send Data", values);
-        refetch();
-        const formData = new FormData();
-        formData.append("id", id!);
-        formData.append("name", values.name);
-    
-        if (file && file.originFileObj) {
-            // Якщо нове зображення завантажено
-            formData.append("imageCategory", file.originFileObj);
-        } else if (file && file.url) {
-            // Якщо зображення не змінювали
-            formData.append("currentImage", file.name);
-        }
-    
-        try {
-            const response = await http_common.put("/api/Category", formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
-            console.log("Update category", response.data);
-            navigate("/admin/categories");
-        } catch (error) {
-            console.error("Помилка при редагуванні категорії:", error);
-            alert("Помилка при редагуванні категорії");
-        }
-    };
-    
+        http_common.put<ICategoryEdit>("/api/Category", { ...values, id: id } ,
+            {headers: {"Content-Type": "multipart/form-data"}})
+            .then(resp => {
+                console.log("Update category", resp.data);
+                refetch();
+                navigate('/admin/categories');
+            })
+    }
 
     useEffect(() => {
         // Завантажуємо дані категорії з бекенду
@@ -58,7 +65,7 @@ const CategoryEditPage = () => {
                 form.setFieldsValue({
                     ...data,
                 });
-                if(data.imageCategory) {
+                if(data.imageCategory!=null) {
                     setFile({
                        uid: '-1',
                        name: data.imageCategory,
@@ -90,6 +97,11 @@ const CategoryEditPage = () => {
                 <Form.Item
                     name="imageCategory"
                     label="Фото"
+                    valuePropName="imageCategory"
+                    getValueFromEvent={(e: UploadChangeParam) => {
+                        const image = e?.fileList[0] as IUploadedFile;
+                        return image?.originFileObj;
+                    }}
                 >
                     <Upload
                         beforeUpload={() => false}

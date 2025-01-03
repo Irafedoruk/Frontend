@@ -5,3 +5,8 @@ export interface ISubCategoryItem {
     categoryName: string;
     imageSubCategory: string;
 }
+
+export interface ISubCategoryName {
+    id: number;
+    name: string;
+}

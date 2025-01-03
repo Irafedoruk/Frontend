@@ -57,9 +57,8 @@ const SubCategoryEditPage: React.FC = () => {
             });
     }, [id, form]);
 
-    const handleSubmit = async (values: ISubCategoryEdit) => {
+    const onSubmit = async (values: ISubCategoryEdit) => {
         console.log("Send Data", values);
-
         const formData = new FormData();
         formData.append("id", id!);
         formData.append("name", values.name);
@@ -69,7 +68,6 @@ const SubCategoryEditPage: React.FC = () => {
         } else if (file && file.url) {
             formData.append("currentImage", file.name); // Передаємо ім'я поточного зображення
         }
-
         try {
             await http_common.put<ISubCategoryEdit>("/api/SubCategory", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
@@ -83,11 +81,11 @@ const SubCategoryEditPage: React.FC = () => {
             alert("Помилка при редагуванні підкатегорії");
         }
     };
-
+    
     return (
         <div>
             <h1 className="text-2xl font-bold mb-4">Редагування підкатегорії</h1>
-            <Form form={form} onFinish={handleSubmit} layout="vertical">
+            <Form form={form} onFinish={onSubmit} layout="vertical">
                 <Form.Item
                     label="Назва підкатегорії"
                     name="name"

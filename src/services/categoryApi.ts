@@ -12,11 +12,17 @@ export const categoryApi = createApi({
                 return currentArg !== previousArg
             },
         }),
+        getCategory: builder.query({
+            query: (id) => `/category/${id}`, // Запит на отримання конкретної категорії
+        }),
         deleteCategory: builder.mutation<void, number>({
             query: (id) => ({
                 url: `category/${id}`,
                 method: 'DELETE',
             }),
+        }),
+        getSubCategoriesByCategoryId: builder.query({
+            query: (categoryId) => `/subcategory?categoryId=${categoryId}`, // Запит на отримання підкатегорій для категорії
         }),
         // addPost: builder.mutation({
         //     query: (newPost) => ({
@@ -28,4 +34,4 @@ export const categoryApi = createApi({
     }),
 });
 
-export const { useGetCategoriesQuery, useDeleteCategoryMutation /*useAddPostMutation*/ } = categoryApi;
+export const { useGetCategoriesQuery, useGetCategoryQuery, useGetSubCategoriesByCategoryIdQuery, useDeleteCategoryMutation /*useAddPostMutation*/ } = categoryApi;

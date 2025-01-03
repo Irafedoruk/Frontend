@@ -40,14 +40,24 @@ export interface IProductImageDesc {
     image: string,
 }
 
-// export interface IProductEdit {
-//     id: number;
-//     name: string;
-//     price: number;
-//     categoryId: number;
-//     images?: File[];
-//     //removeImages?: string[];
-// }
+export interface IProductEdit {
+    id: number,
+    code: string,
+    name: string,
+    price: number,
+    images?: File[];
+    manufacturer: string,
+    size: string,
+    color: string,
+    type: string,
+    form: string,
+    quantityInPack: number,
+    quantityInStock: number,
+    //model: string,
+    subCategoryName: string,
+    subCategoryId: number,
+    description: string
+}
 
 export interface IUploadedFile {
     id: number;
