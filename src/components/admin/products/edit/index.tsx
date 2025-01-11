@@ -1,10 +1,10 @@
 import {useState, useEffect} from "react";
 import {useNavigate, useParams, Link} from "react-router-dom";
-import {http_common, API_URL} from '../../../env';
+import {http_common, API_URL} from '../../../../env';
 import {Button, Form, Modal, Input, Upload, UploadFile, Space, InputNumber, Select} from "antd";
 import {RcFile} from "antd/es/upload";
 import {PlusOutlined} from '@ant-design/icons';
-import {IProductEdit, IProductItem} from "../../../interfaces/products";
+import {IProductEdit, IProductItem} from "../../../../interfaces/products";
 import {ISubCategoryName} from "../../subcategory/list/types";
 
 const ProductEditPage = () => {

@@ -3,14 +3,13 @@
 
 import {Link} from "react-router-dom";
 // import {useGetPostsQuery} from "../../services/postApi.ts";
-import { API_URL, http_common } from "../../../env/index.ts";
-import { DeleteDialog } from "../../common/DeleteDialog.tsx";
-import Loader from "../../common/Loader/index.tsx";
-import { useGetCategoriesQuery, useDeleteCategoryMutation } from "../../../services/categoryApi.ts";
+import { API_URL, http_common } from "../../../../env/index.ts";
+import { DeleteDialog } from "../../../common/DeleteDialog.tsx";
+import Loader from "../../../common/Loader/index.tsx";
+import { useGetCategoriesQuery, useDeleteCategoryMutation } from "../../../../services/categoryApi.ts";
 
 const CategoriesListPage = () => {
-    const { refetch } = useGetCategoriesQuery();
-    const {data: list, /*error,*/ isLoading} = useGetCategoriesQuery();
+    const {data: list, /*error,*/ isLoading,refetch } = useGetCategoriesQuery();
     const [deleteCategory] = useDeleteCategoryMutation();
 
     const handleDelete = async (id: number) => {

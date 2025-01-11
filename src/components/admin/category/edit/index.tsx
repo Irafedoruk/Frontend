@@ -4,9 +4,9 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { RcFile, UploadChangeParam } from "antd/es/upload";
-import { API_URL, http_common } from "../../../env/index.ts";
+import { API_URL, http_common } from "../../../../env/index.ts";
 import { IUploadedFile } from "../create/types.ts";
-import { useGetCategoriesQuery } from "../../../services/categoryApi.ts";
+import { useGetCategoriesQuery } from "../../../../services/categoryApi.ts";
 
 const CategoryEditPage = () => {
     const { refetch } = useGetCategoriesQuery();

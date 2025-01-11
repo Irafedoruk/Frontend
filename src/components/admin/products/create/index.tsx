@@ -3,11 +3,11 @@ import {Form, Input, Button, Modal, Upload, UploadFile, Space, InputNumber, Sele
 import {useNavigate, Link} from 'react-router-dom';
 import {RcFile, UploadChangeParam} from "antd/es/upload";
 import {PlusOutlined} from '@ant-design/icons';
-import {IProductCreate, IProductImageDesc} from '../../../interfaces/products';
-import {http_common} from "../../../env";
-import EditorTiny from "../../common/EditorTiny";
+import {IProductCreate, IProductImageDesc} from '../../../../interfaces/products';
+import {http_common} from "../../../../env";
+import EditorTiny from "../../../common/EditorTiny";
 import { ISubCategoryItem } from '../../subcategory/list/types';
-import { useGetProductsQuery } from '../../../services/productApi';
+import { useGetProductsQuery } from '../../../../services/productApi';
 
 // import Loader from '../../common/loader/Loader';
 

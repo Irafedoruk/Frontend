@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import { API_URL } from "../../../env/index.ts";
-import Loader from "../../common/Loader/index.tsx";
-import { useGetSubCategoriesQuery, useDeleteSubCategoryMutation } from "../../../services/subcategoryApi.ts";
+import { API_URL } from "../../../../env/index.ts";
+import Loader from "../../../common/Loader/index.tsx";
+import { useGetSubCategoriesQuery, useDeleteSubCategoryMutation } from "../../../../services/subcategoryApi.ts";
 import { useEffect, useState } from "react";
 import axios from "axios";
 

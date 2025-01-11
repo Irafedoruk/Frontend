@@ -4,8 +4,8 @@ import {Link, useNavigate} from "react-router-dom";
 import {useState} from "react";
 import {PlusOutlined} from '@ant-design/icons';
 import {RcFile, UploadChangeParam} from "antd/es/upload";
-import {http_common} from "../../../env/index.ts";
-import { useGetCategoriesQuery } from "../../../services/categoryApi.ts";
+import {http_common} from "../../../../env/index.ts";
+import { useGetCategoriesQuery } from "../../../../services/categoryApi.ts";
 
 const CategoryCreatePage = () => {
 

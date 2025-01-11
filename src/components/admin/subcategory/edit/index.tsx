@@ -4,9 +4,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button, Form, Input, Modal, Row, Upload } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { ISubCategoryEdit, IUploadedFile } from "./types";
-import { API_URL, http_common } from "../../../env";
+import { API_URL, http_common } from "../../../../env";
 import { RcFile, UploadFile } from "antd/es/upload/interface";
-import { useGetSubCategoriesQuery } from "../../../services/subcategoryApi";
+import { useGetSubCategoriesQuery } from "../../../../services/subcategoryApi";
 
 const SubCategoryEditPage: React.FC = () => {
     const { refetch } = useGetSubCategoriesQuery();

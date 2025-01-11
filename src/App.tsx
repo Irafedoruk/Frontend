@@ -1,16 +1,17 @@
 import {Route, Routes} from "react-router-dom";
-import HomePage from "./components/category/list/index.tsx";
-import CategoryCreatePage from "./components/category/create/index.tsx";
-import CategoryEditPage from "./components/category/edit/index.tsx";
-import AdminLayout from "./components/containers/adminLayout.tsx";
-import CategoriesListPage from "./components/category/list/index.tsx";
-import SubCategoryCreatePage from "./components/subcategory/create/index.tsx";
-import SubCategoryEditPage from "./components/subcategory/edit/index.tsx";
-import SubCategoryListPage from "./components/subcategory/list/index.tsx";
-import ProductListPage from "./components/products/list/index.tsx";
-import ProductCreatePage from "./components/products/create/index.tsx";
-import ProductEditPage from "./components/products/edit/index.tsx";
-import CategoryViewPage from "./components/category/details/index.tsx";
+import CategoryCreatePage from "./components/admin/category/create/index.tsx";
+import CategoryEditPage from "./components/admin/category/edit/index.tsx";
+import AdminLayout from "./components/admin/containers/adminLayout.tsx";
+import CategoriesListPage from "./components/admin/category/list/index.tsx";
+import SubCategoryCreatePage from "./components/admin/subcategory/create/index.tsx";
+import SubCategoryEditPage from "./components/admin/subcategory/edit/index.tsx";
+import SubCategoryListPage from "./components/admin/subcategory/list/index.tsx";
+import ProductListPage from "./components/admin/products/list/index.tsx";
+import ProductCreatePage from "./components/admin/products/create/index.tsx";
+import ProductEditPage from "./components/admin/products/edit/index.tsx";
+import CategoryViewPage from "./components/admin/category/details/index.tsx";
+import ClientLayout from "./components/client/layout/ClientLayout.tsx";
+import HomePage from "./components/client/home/HomePage.tsx";
 
 export default function App() {
     return (
@@ -38,6 +39,11 @@ export default function App() {
                     <Route path="edit/:id" element={<ProductEditPage />} />
                     {/* <Route path="details/:id" element={<ProductDetailPage />} /> */}
                     </Route>
+                </Route>
+                {/* Layout для клієнтів */}
+                <Route path="/" element={<ClientLayout />}>
+                    <Route index element={<HomePage />} />
+                    {/* <Route path="about" element={<AboutPage />} /> */}
                 </Route>
                 {/* Сторінка 404 */}
                 <Route path="*" element={<h1>Сторінка не знайдена</h1>} />

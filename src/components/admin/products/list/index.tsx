@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useGetProductsQuery, useDeleteProductMutation } from "../../../services/productApi";
-import { API_URL, http_common } from "../../../env";
-import Loader from "../../common/Loader";
-import { IProductItem } from "../../../interfaces/products";
+import { useGetProductsQuery, useDeleteProductMutation } from "../../../../services/productApi";
+import { API_URL, http_common } from "../../../../env";
+import Loader from "../../../common/Loader";
+import { IProductItem } from "../../../../interfaces/products";
 
 const ProductListPage = () => {
     const [list, setList] = useState<IProductItem[]>([]);

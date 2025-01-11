@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { API_URL } from "../../../env/index.ts";
-import { useGetCategoryQuery, useGetSubCategoriesByCategoryIdQuery } from "../../../services/categoryApi.ts";
-import Loader from "../../common/Loader/index.tsx";
+import { API_URL } from "../../../../env/index.ts";
+import { useGetCategoryQuery, useGetSubCategoriesByCategoryIdQuery } from "../../../../services/categoryApi.ts";
+import Loader from "../../../common/Loader/index.tsx";
 
 const CategoryViewPage = () => {
     const { id } = useParams(); // Отримуємо ID категорії з URL

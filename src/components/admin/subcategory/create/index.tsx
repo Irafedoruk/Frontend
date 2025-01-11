@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { ISubCategoryCreate, IUploadedFile } from "./types";
-import { useGetCategoriesQuery } from "../../../services/categoryApi";
-import { http_common } from "../../../env";
+import { useGetCategoriesQuery } from "../../../../services/categoryApi";
+import { http_common } from "../../../../env";
 import {Link, useNavigate} from "react-router-dom";
 import { Button, Form, Input, Modal, Row, Upload } from "antd";
-import { useGetSubCategoriesQuery } from "../../../services/subcategoryApi";
+import { useGetSubCategoriesQuery } from "../../../../services/subcategoryApi";
 import { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload/interface";
 import { PlusOutlined } from "@ant-design/icons";
 
