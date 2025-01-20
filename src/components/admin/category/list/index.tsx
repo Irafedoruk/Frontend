@@ -3,8 +3,7 @@
 
 import {Link} from "react-router-dom";
 // import {useGetPostsQuery} from "../../services/postApi.ts";
-import { API_URL, http_common } from "../../../../env/index.ts";
-import { DeleteDialog } from "../../../common/DeleteDialog.tsx";
+import { API_URL} from "../../../../env/index.ts";
 import Loader from "../../../common/Loader/index.tsx";
 import { useGetCategoriesQuery, useDeleteCategoryMutation } from "../../../../services/categoryApi.ts";
 

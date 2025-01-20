@@ -12,6 +12,13 @@ import ProductEditPage from "./components/admin/products/edit/index.tsx";
 import CategoryViewPage from "./components/admin/category/details/index.tsx";
 import ClientLayout from "./components/client/layout/ClientLayout.tsx";
 import HomePage from "./components/client/home/HomePage.tsx";
+import SubCategoryViewPage from "./components/admin/subcategory/details/index.tsx";
+import ProductViewPage from "./components/admin/products/details/index.tsx";
+import UsersList from "./components/admin/users/UsersList.tsx";
+import AdminsList from "./components/admin/users/AdminsList.tsx";
+import LoginPage from "./components/client/auth/LoginPage.tsx";
+import RegisterPage from "./components/client/auth/RegisterPage.tsx";
+import ProfilePage from "./components/client/profile/ProfilePage.tsx";
 
 export default function App() {
     return (
@@ -31,30 +38,32 @@ export default function App() {
                     <Route path="subcategories" element={<SubCategoryListPage />} />
                     <Route path="subcategories/create" element={<SubCategoryCreatePage />} />
                     <Route path="subcategories/edit/:id" element={<SubCategoryEditPage />} />
+                    <Route path="subcategories/view/:id" element={<SubCategoryViewPage />} />
                 
                     {/* PRODUCTS */}
                     <Route path={"products"}>
                     <Route index element={<ProductListPage />} />
                     <Route path="create" element={<ProductCreatePage />} />
                     <Route path="edit/:id" element={<ProductEditPage />} />
-                    {/* <Route path="details/:id" element={<ProductDetailPage />} /> */}
+                    <Route path="/admin/products/view/:id" element={<ProductViewPage />} />
                     </Route>
+
+                    {/* USERS */}
+                    <Route path="users" element={<UsersList />} />
+                    <Route path="admins" element={<AdminsList />} />
                 </Route>
+
                 {/* Layout для клієнтів */}
                 <Route path="/" element={<ClientLayout />}>
                     <Route index element={<HomePage />} />
+                    <Route path="login" element={<LoginPage />} />
+                    <Route path="register" element={<RegisterPage />} />
+                    <Route path="profile" element={<ProfilePage />} />
                     {/* <Route path="about" element={<AboutPage />} /> */}
+
                 </Route>
                 {/* Сторінка 404 */}
                 <Route path="*" element={<h1>Сторінка не знайдена</h1>} />
-
-                    
-                    
-
-                   {/* <Route path={"posts"}>
-                        <Route index element={<PostsList />} />
-                    </Route> */}
-                
             </Routes>
         </>
     )

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 
 const Footer = () => {
     return (
@@ -9,26 +10,14 @@ const Footer = () => {
                     <h2 className="text-2xl font-bold mb-4">bookopt</h2>
                     <div className="flex space-x-4">
                         {/* Іконки соцмереж */}
-                        <a href="#" aria-label="Instagram">
-                            <img
-                                src="/icons/instagram.svg"
-                                alt="Instagram"
-                                className="w-6 h-6"
-                            />
+                        <a href="#" aria-label="Instagram" className="hover:text-gray-400">
+                            <FaInstagram className="w-6 h-6" />
                         </a>
-                        <a href="#" aria-label="Facebook">
-                            <img
-                                src="/icons/facebook.svg"
-                                alt="Facebook"
-                                className="w-6 h-6"
-                            />
+                        <a href="#" aria-label="Facebook" className="hover:text-gray-400">
+                            <FaFacebook className="w-6 h-6" />
                         </a>
-                        <a href="#" aria-label="YouTube">
-                            <img
-                                src="/icons/youtube.svg"
-                                alt="YouTube"
-                                className="w-6 h-6"
-                            />
+                        <a href="#" aria-label="YouTube" className="hover:text-gray-400">
+                            <FaYoutube className="w-6 h-6" />
                         </a>
                     </div>
                 </div>

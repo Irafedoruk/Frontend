@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useGetProductsQuery, useDeleteProductMutation } from "../../../../services/productApi";
 import { API_URL, http_common } from "../../../../env";
-import Loader from "../../../common/Loader";
 import { IProductItem } from "../../../../interfaces/products";
 
 const ProductListPage = () => {
@@ -29,7 +27,7 @@ const ProductListPage = () => {
     }, []);
     useEffect(() => {
         // Завантаження підкатегорій для відображення
-        fetch(`http://localhost:5126/api/SubCategory`)
+        fetch(`${API_URL}/api/SubCategory`)
             .then((response) => response.json())
             .then((data) => setSubCategories(data))
             .catch((err) => console.error("Помилка завантаження підкатегорій:", err));

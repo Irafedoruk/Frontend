@@ -5,6 +5,7 @@ const AdminLayout = () => {
     const [openCategoryMenu, setOpenCategoryMenu] = useState(false);
     const [openProductMenu, setOpenProductMenu] = useState(false);
     const [openSubCategoryMenu, setOpenSubCategoryMenu] = useState(false);
+    const [openUserMenu, setOpenUserMenu] = useState(false);
 
     return (
         <div className="flex h-screen">
@@ -71,7 +72,24 @@ const AdminLayout = () => {
                     <li><Link to="/admin/discounts" className="hover:text-gray-400">Знижки</Link></li>
                     <li><Link to="/admin/filters" className="hover:text-gray-400">Фільтри</Link></li>
                     <li><Link to="/admin/orders" className="hover:text-gray-400">Замовлення</Link></li>
-                    <li><Link to="/admin/users" className="hover:text-gray-400">Користувачі</Link></li>
+                    <li>
+                        <div
+                            onClick={() => setOpenUserMenu(!openUserMenu)}
+                            className="cursor-pointer hover:text-gray-400"
+                        >
+                            Користувачі
+                        </div>
+                        {openUserMenu && (
+                            <ul className="ml-4 mt-2 space-y-1">
+                                <li>
+                                    <Link to="/admin/users" className="hover:text-gray-400">Звичайні користувачі</Link>
+                                </li>
+                                <li>
+                                    <Link to="/admin/admins" className="hover:text-gray-400">Адміністратори</Link>
+                                </li>
+                            </ul>
+                        )}
+                    </li>
                     <li><Link to="/logout" className="hover:text-gray-400">Авторизація</Link></li>
                 </ul>
             </div>

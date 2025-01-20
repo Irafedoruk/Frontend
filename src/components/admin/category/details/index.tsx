@@ -5,7 +5,7 @@ import { useGetCategoryQuery, useGetSubCategoriesByCategoryIdQuery } from "../..
 import Loader from "../../../common/Loader/index.tsx";
 
 const CategoryViewPage = () => {
-    const { id } = useParams(); // Отримуємо ID категорії з URL
+    const { id } = useParams();
     const [category, setCategory] = useState<any>(null);
     const [subCategories, setSubCategories] = useState<any[]>([]);
 
@@ -17,8 +17,9 @@ const CategoryViewPage = () => {
             setCategory(categoryData);
         }
         if (subCategoryData) {
-            // Фільтруємо підкатегорії, щоб показувати тільки ті, що належать поточній категорії
-            const filteredSubCategories = subCategoryData.filter((subCategory: any) => subCategory.categoryId === Number(id));
+            const filteredSubCategories = subCategoryData.filter(
+                (subCategory: any) => subCategory.categoryId === Number(id)
+            );
             setSubCategories(filteredSubCategories);
         }
     }, [categoryData, subCategoryData, id]);
@@ -27,11 +28,11 @@ const CategoryViewPage = () => {
 
     return (
         <div className="p-6">
-            <h1 className="text-2xl font-bold mb-4">Інформація про категорію</h1>
-
+            {/* Основна інформація про категорію */}
             {category && (
-                <div className="mb-6">
-                    <div className="mb-2">
+                <div className="mb-6 p-6 border rounded-lg shadow-md bg-white">
+                    <h1 className="text-2xl font-bold mb-4">Інформація про категорію</h1>
+                    <div className="mb-4">
                         <span className="font-semibold">Назва:</span> {category.name}
                     </div>
                     <div className="mb-4">
@@ -42,34 +43,33 @@ const CategoryViewPage = () => {
                         <img
                             src={`${API_URL}/images/300_${category.imageCategory}`}
                             alt={category.name}
-                            className="h-32 w-32 object-cover rounded mt-2"
+                            className="h-40 w-40 object-cover rounded-lg mt-2 border"
                         />
                     </div>
                 </div>
             )}
 
+            {/* Підкатегорії */}
             <h2 className="text-xl font-semibold mt-6 mb-4">Підкатегорії</h2>
-            <ul>
-                {subCategories?.length > 0 ? (
-                    subCategories.map((subCategory: any) => (
-                        <li key={subCategory.id} className="mb-4 p-4 border rounded-lg shadow-sm hover:bg-gray-50">
-                            <div className="mb-2">
-                                <span className="font-semibold">Назва підкатегорії:</span> {subCategory.name}
-                            </div>
-                            <div className="mb-2">
-                                <span className="font-semibold">Зображення підкатегорії:</span>
-                                <img
-                                    src={`${API_URL}/images/300_${subCategory.imageSubCategory}`}
-                                    alt={subCategory.name}
-                                    className="h-16 w-16 object-cover rounded mt-2"
-                                />
-                            </div>
-                        </li>
-                    ))
-                ) : (
-                    <p>Немає підкатегорій для цієї категорії.</p>
-                )}
-            </ul>
+            {subCategories?.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    {subCategories.map((subCategory: any) => (
+                        <div
+                            key={subCategory.id}
+                            className="p-4 border rounded-lg shadow-md bg-white hover:shadow-lg transition-shadow"
+                        >
+                            <h3 className="text-lg font-bold mb-2">{subCategory.name}</h3>
+                            <img
+                                src={`${API_URL}/images/300_${subCategory.imageSubCategory}`}
+                                alt={subCategory.name}
+                                className="h-24 w-24 object-cover rounded-lg border mb-4"
+                            />
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <p className="text-gray-600">Немає підкатегорій для цієї категорії.</p>
+            )}
         </div>
     );
 };

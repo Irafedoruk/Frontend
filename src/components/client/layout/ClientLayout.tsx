@@ -1,15 +1,18 @@
 import { useState } from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useGetCategoriesQuery, useGetSubCategoriesByCategoryIdQuery } from "../../../services/categoryApi"; // Ваш API запит
 import Footer from "./Footer";
+import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
 
 const ClientLayout = () => {
+  const token = localStorage.getItem("token"); // Перевірка наявності токена
   const [search, setSearch] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery(); // Отримуємо категорії
   const [subCategories, setSubCategories] = useState<{ [key: number]: any[] }>({});
-
+  const navigate = useNavigate();
+  
   // Отримуємо підкатегорії для категорії при наведенні
   const { data: subCategoryData, isLoading: subCategoriesLoading, isError } = useGetSubCategoriesByCategoryIdQuery(hoveredCategory ?? -1, {
     skip: hoveredCategory === null, // Пропускаємо запит, якщо категорія не вибрана
@@ -37,6 +40,12 @@ const ClientLayout = () => {
 
   const handleCategoryLeave = () => {
     setHoveredCategory(null); // Закриваємо підкатегорії при виведенні миші
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");  // Видаляємо токен з локал сторедж
+    alert("Ви успішно вийшли з системи!");
+    navigate("/");
   };
 
   return (
@@ -123,9 +132,22 @@ const ClientLayout = () => {
               <span>0 ₴</span>
             </Link>
 
-            <Link to="/profile" className="hover:underline">
-              👤
-            </Link>
+          <nav className="flex items-center space-x-4">
+            {localStorage.getItem("token") ? (
+              <>
+                <Link to="/profile" className="text-white text-2xl hover:text-orange-500">
+                    <FaUser />
+                </Link>
+                <button onClick={handleLogout} className="text-white text-2xl hover:text-orange-500">
+                  <FaSignOutAlt />
+                </button>
+              </>
+            ) : (
+              <Link to="/login" className="text-white text-2xl hover:text-orange-500">
+                  <FaSignInAlt />
+                </Link>
+            )}
+          </nav>
 
             <Link to="/wishlist" className="hover:underline">
               ❤️

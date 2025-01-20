@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IProductItem, IProductCreate } from '../interfaces/products';
+import { API_URL } from '../env';
 
 export const productApi = createApi({
     reducerPath: 'productApi',
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5126/api' }),
+    baseQuery: fetchBaseQuery({ baseUrl: `${API_URL}/api` }),
     endpoints: (builder) => ({
         getProducts: builder.query<IProductItem[], void>({
             query: () => '/products',
@@ -17,10 +18,14 @@ export const productApi = createApi({
                 method: 'DELETE',
             }),
         }),
+        getProductsBySubCategoryId: builder.query<IProductItem[], number>({
+            query: (id) => `/products/bySubCategory/${id}`,
+        }),
     }),
 });
 
 export const {
     useGetProductsQuery,
     useDeleteProductMutation,
+    useGetProductsBySubCategoryIdQuery,
 } = productApi;

@@ -6,8 +6,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 const SubCategoryListPage = () => {
-    const { refetch } = useGetSubCategoriesQuery();
-    const { data: list, isLoading } = useGetSubCategoriesQuery();
+    const { data: list, isLoading, refetch } = useGetSubCategoriesQuery();
     const [deleteSubCategory] = useDeleteSubCategoryMutation();
     const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
         
