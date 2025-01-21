@@ -6,7 +6,7 @@ const AdminsList = () => {
     const [admins, setAdmins] = useState<User[]>([]);
 
     useEffect(() => {
-        axios.get<User[]>("/api/account/admins")
+        axios.get<User[]>("/api/accounts/admins")
             .then(response => setAdmins(response.data))
             .catch(error => console.error("Error fetching admins:", error));
     }, []);

@@ -14,10 +14,10 @@ const RegisterPage = () => {
       }
   
       try {
-        const response = await fetch("/api/account/auth/register", {
+        const response = await fetch("/api/accounts/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ firstName, lastName, email, password }),
+          body: JSON.stringify({ email, password }),
         });
   
         if (response.ok) {
@@ -40,7 +40,7 @@ const RegisterPage = () => {
             handleRegister();
           }}
         >
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label htmlFor="firstName" className="block text-sm font-medium">
               Ім'я
             </label>
@@ -65,7 +65,7 @@ const RegisterPage = () => {
               required
               className="w-full p-2 border rounded-md"
             />
-          </div>
+          </div> */}
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium">
               Email
