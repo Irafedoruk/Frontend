@@ -19,10 +19,13 @@ import AdminsList from "./components/admin/users/AdminsList.tsx";
 import LoginPage from "./components/client/auth/LoginPage.tsx";
 import RegisterPage from "./components/client/auth/RegisterPage.tsx";
 import ProfilePage from "./components/client/profile/ProfilePage.tsx";
+<<<<<<< HEAD
 import AboutPage from "./components/client/layout/AboutPage.tsx";
 import ContactsPage from "./components/client/layout/ContactsPage";
 import PricingPolicyPage from "./components/client/layout/PricingPolicyPage.tsx";
 
+=======
+>>>>>>> e7a907204a46242ea4fc98f1b94afc6bebc18d6e
 
 export default function App() {
     return (
@@ -63,9 +66,13 @@ export default function App() {
                     <Route path="login" element={<LoginPage />} />
                     <Route path="register" element={<RegisterPage />} />
                     <Route path="profile" element={<ProfilePage />} />
+<<<<<<< HEAD
                     <Route path="about" element={<AboutPage />} />
                     <Route path="contact" element={<ContactsPage />} />
                     <Route path="pricing-policy" element={<PricingPolicyPage />} />
+=======
+                    {/* <Route path="about" element={<AboutPage />} /> */}
+>>>>>>> e7a907204a46242ea4fc98f1b94afc6bebc18d6e
 
                 </Route>
                 {/* Сторінка 404 */}

@@ -6,7 +6,11 @@ const UsersList = () => {
     const [users, setUsers] = useState<User[]>([]);
 
     useEffect(() => {
+<<<<<<< HEAD
         axios.get<User[]>("/api/account/users")
+=======
+        axios.get<User[]>("/api/accounts/users")
+>>>>>>> e7a907204a46242ea4fc98f1b94afc6bebc18d6e
             .then(response => {
                 console.log("Users response:", response.data);
                 setUsers(response.data);
