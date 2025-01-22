@@ -14,17 +14,10 @@ const RegisterPage = () => {
       }
   
       try {
-<<<<<<< HEAD
         const response = await fetch("/api/account/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ firstName, lastName, email, password }),
-=======
-        const response = await fetch("/api/accounts/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
->>>>>>> e7a907204a46242ea4fc98f1b94afc6bebc18d6e
         });
   
         if (response.ok) {
@@ -47,11 +40,7 @@ const RegisterPage = () => {
             handleRegister();
           }}
         >
-<<<<<<< HEAD
           <div className="mb-4">
-=======
-          {/* <div className="mb-4">
->>>>>>> e7a907204a46242ea4fc98f1b94afc6bebc18d6e
             <label htmlFor="firstName" className="block text-sm font-medium">
               Ім'я
             </label>
@@ -76,11 +65,7 @@ const RegisterPage = () => {
               required
               className="w-full p-2 border rounded-md"
             />
-<<<<<<< HEAD
           </div>
-=======
-          </div> */}
->>>>>>> e7a907204a46242ea4fc98f1b94afc6bebc18d6e
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium">
               Email

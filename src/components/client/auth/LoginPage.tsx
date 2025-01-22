@@ -9,11 +9,8 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       // запит до API
-<<<<<<< HEAD
-      const response = await fetch("/api/account/auth/login", {
-=======
+      //const response = await fetch("/api/account/auth/login", {
       const response = await fetch("/api/accounts/auth/login", {
->>>>>>> e7a907204a46242ea4fc98f1b94afc6bebc18d6e
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

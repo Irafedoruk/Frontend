@@ -10,7 +10,6 @@ const Footer = () => {
                     <h2 className="text-2xl font-bold mb-4">bookopt</h2>
                     <div className="flex space-x-4">
                         {/* Іконки соцмереж */}
-<<<<<<< HEAD
                         <a href="#" aria-label="Instagram" className="hover:text-gray-400 hover:scale-110 transition duration-200">
                             <FaInstagram className="w-6 h-6" />
                         </a>
@@ -21,7 +20,6 @@ const Footer = () => {
                             <FaYoutube className="w-6 h-6" />
                         </a>
 
-=======
                         <a href="#" aria-label="Instagram" className="hover:text-gray-400">
                             <FaInstagram className="w-6 h-6" />
                         </a>
@@ -31,7 +29,6 @@ const Footer = () => {
                         <a href="#" aria-label="YouTube" className="hover:text-gray-400">
                             <FaYoutube className="w-6 h-6" />
                         </a>
->>>>>>> e7a907204a46242ea4fc98f1b94afc6bebc18d6e
                     </div>
                 </div>
 
@@ -40,40 +37,31 @@ const Footer = () => {
                     <h3 className="font-semibold mb-4">Інформація</h3>
                     <ul className="space-y-2">
                         <li>
-<<<<<<< HEAD
                             <Link to="/about" className="hover:underline hover:text-gray-400 transition duration-200">
                                 Про нас
                             </Link>
 
                         </li>
                         <li>
-                            <Link to="/contact" className="hover:underline hover:text-gray-400 transition duration-200">
-=======
+                            <Link to="/contact" className="hover:underline hover:text-gray-400 transition duration-200"></Link>
                             <Link to="/about" className="hover:underline">
                                 Про нас
                             </Link>
                         </li>
                         <li>
                             <Link to="/contact" className="hover:underline">
->>>>>>> e7a907204a46242ea4fc98f1b94afc6bebc18d6e
                                 Контакт
                             </Link>
                         </li>
                         <li>
-<<<<<<< HEAD
-                            <Link to="/pricing-policy" className="hover:underline hover:text-gray-400 transition duration-200">
-=======
+                            <Link to="/pricing-policy" className="hover:underline hover:text-gray-400 transition duration-200"></Link>
                             <Link to="/pricing" className="hover:underline">
->>>>>>> e7a907204a46242ea4fc98f1b94afc6bebc18d6e
                                 Цінова політика
                             </Link>
                         </li>
                         <li>
-<<<<<<< HEAD
-                            <Link to="/how-to-use" className="hover:underline hover:text-gray-400 transition duration-200">
-=======
+                            <Link to="/how-to-use" className="hover:underline hover:text-gray-400 transition duration-200"></Link>
                             <Link to="/how-to-use" className="hover:underline">
->>>>>>> e7a907204a46242ea4fc98f1b94afc6bebc18d6e
                                 Як користуватись сайтом
                             </Link>
                         </li>
@@ -85,38 +73,26 @@ const Footer = () => {
                     <h3 className="font-semibold mb-4">Послуги і сервіси</h3>
                     <ul className="space-y-2">
                         <li>
-<<<<<<< HEAD
-                            <Link to="/joint-purchases" className="hover:underline hover:text-gray-400 transition duration-200">
-=======
+                            <Link to="/joint-purchases" className="hover:underline hover:text-gray-400 transition duration-200"></Link>
                             <Link to="/joint-purchases" className="hover:underline">
->>>>>>> e7a907204a46242ea4fc98f1b94afc6bebc18d6e
                                 Спільні покупки
                             </Link>
                         </li>
                         <li>
-<<<<<<< HEAD
-                            <Link to="/reviews" className="hover:underline hover:text-gray-400 transition duration-200">
-=======
+                            <Link to="/reviews" className="hover:underline hover:text-gray-400 transition duration-200"></Link>
                             <Link to="/reviews" className="hover:underline">
->>>>>>> e7a907204a46242ea4fc98f1b94afc6bebc18d6e
                                 Відгуки наших клієнтів
                             </Link>
                         </li>
                         <li>
-<<<<<<< HEAD
-                            <Link to="/blog" className="hover:underline hover:text-gray-400 transition duration-200">
-=======
+                            <Link to="/blog" className="hover:underline hover:text-gray-400 transition duration-200"></Link>
                             <Link to="/blog" className="hover:underline">
->>>>>>> e7a907204a46242ea4fc98f1b94afc6bebc18d6e
                                 Блог
                             </Link>
                         </li>
                         <li>
-<<<<<<< HEAD
-                            <Link to="/dropshipping" className="hover:underline hover:text-gray-400 transition duration-200">
-=======
+                            <Link to="/dropshipping" className="hover:underline hover:text-gray-400 transition duration-200"></Link>
                             <Link to="/dropshipping" className="hover:underline">
->>>>>>> e7a907204a46242ea4fc98f1b94afc6bebc18d6e
                                 Друк на шоперах
                             </Link>
                         </li>
