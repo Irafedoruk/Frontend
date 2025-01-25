@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { ISubCategoryCreate, IUploadedFile } from "../../../../interfaces/subcategory";
 import { useGetCategoriesQuery } from "../../../../services/categoryApi";
 import { http_common } from "../../../../env";
-import {Link, useNavigate} from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { Button, Form, Input, Modal, Row, Upload } from "antd";
 import { useGetSubCategoriesQuery } from "../../../../services/subcategoryApi";
 import { RcFile, UploadChangeParam, UploadFile } from "antd/es/upload/interface";
@@ -13,7 +12,7 @@ const SubCategoryCreatePage: React.FC = () => {
     const { refetch } = useGetSubCategoriesQuery();
     const navigate = useNavigate();
     const [form] = Form.useForm<ISubCategoryCreate>();
-    const { data: categories, isLoading } = useGetCategoriesQuery();
+    const { data: categories} = useGetCategoriesQuery();
     const [previewOpen, setPreviewOpen] = useState<boolean>(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');

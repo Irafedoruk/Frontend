@@ -1,30 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { useGetCategoriesQuery, useGetSubCategoriesByCategoryIdQuery } from "../../../services/categoryApi"; // Ваш API запит
+import { useGetCategoriesQuery, useGetSubCategoriesByCategoryIdQuery } from "../../../services/categoryApi";
 import Footer from "./Footer";
 import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
 
 const ClientLayout = () => {
-  const token = localStorage.getItem("token"); // Перевірка наявності токена
+  const token = localStorage.getItem("token");
   const [search, setSearch] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
-  const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery(); // Отримуємо категорії
-  const [subCategories, setSubCategories] = useState<{ [key: number]: any[] }>({});
-  const navigate = useNavigate();
-  
-  // Отримуємо підкатегорії для категорії при наведенні
-  const { data: subCategoryData, isLoading: subCategoriesLoading, isError } = useGetSubCategoriesByCategoryIdQuery(hoveredCategory ?? -1, {
-    skip: hoveredCategory === null, // Пропускаємо запит, якщо категорія не вибрана
-  });
+  const [filteredSubCategories, setFilteredSubCategories] = useState<any[]>([]);
 
-  // Зберігаємо підкатегорії в стані, якщо вони були отримані
-  if (subCategoryData && !subCategories[hoveredCategory ?? -1] && !subCategoriesLoading && !isError) {
-    setSubCategories((prev) => ({
-      ...prev,
-      [hoveredCategory ?? -1]: subCategoryData,
-    }));
-  }
+  const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
+  const { data: subCategoryData, isLoading: subCategoriesLoading } = useGetSubCategoriesByCategoryIdQuery(
+    hoveredCategory ?? -1,
+    { skip: hoveredCategory === null }
+  );
+
+  useEffect(() => {
+    if (subCategoryData && hoveredCategory !== null) {
+      const filtered = subCategoryData.filter(
+        (subCategory: any) => subCategory.categoryId === hoveredCategory
+      );
+      setFilteredSubCategories(filtered);
+    }
+  }, [subCategoryData, hoveredCategory]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -35,18 +35,21 @@ const ClientLayout = () => {
   };
 
   const handleCategoryHover = (categoryId: number) => {
-    setHoveredCategory(categoryId); // Встановлюємо категорію для відображення підкатегорій
+    setHoveredCategory(categoryId);
   };
 
   const handleCategoryLeave = () => {
-    setHoveredCategory(null); // Закриваємо підкатегорії при виведенні миші
+    setHoveredCategory(null);
+    setFilteredSubCategories([]);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");  // Видаляємо токен з локал сторедж
+    localStorage.removeItem("token");
     alert("Ви успішно вийшли з системи!");
     navigate("/");
   };
+
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -58,9 +61,7 @@ const ClientLayout = () => {
             <span>🌱 <Link to="/eco" className="hover:underline">Екошопери</Link></span>
           </div>
           <div>
-            <a href="tel:+380683010220" className="hover:underline">
-              📞 +38 068 301-02-20
-            </a>
+            <a href="tel:+380683010220" className="hover:underline">📞 +38 068 301-02-20</a>
           </div>
         </div>
 
@@ -69,12 +70,8 @@ const ClientLayout = () => {
             <span className="text-orange-500">book</span>opt
           </Link>
 
-          {/* Випадаюче меню з категоріями */}
           <div className="relative">
-            <button
-              onClick={toggleMenu}
-              className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600"
-            >
+            <button onClick={toggleMenu} className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">
               📚 Каталог
             </button>
 
@@ -88,15 +85,11 @@ const ClientLayout = () => {
                       onMouseEnter={() => handleCategoryHover(category.id)}
                       onMouseLeave={handleCategoryLeave}
                     >
-                      <Link to={`/category/${category.id}`} className="hover:underline">
-                        {category.name}
-                      </Link>
-
-                      {/* Відображення підкатегорій при наведенні на категорію */}
-                      {hoveredCategory === category.id && subCategories[category.id] && (
+                      <Link to={`/category/${category.id}`} className="hover:underline">{category.name}</Link>
+                      {hoveredCategory === category.id && (
                         <div className="absolute left-full top-0 mt-2 w-64 bg-white text-black shadow-lg">
                           <ul className="p-4 space-y-2">
-                            {subCategories[category.id].map((subCategory) => (
+                            {filteredSubCategories.map((subCategory) => (
                               <li key={subCategory.id}>
                                 <Link to={`/subcategory/${subCategory.id}`} className="hover:underline">
                                   {subCategory.name}
@@ -121,9 +114,7 @@ const ClientLayout = () => {
               value={search}
               onChange={handleSearch}
             />
-            <button className="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600">
-              🔍
-            </button>
+            <button className="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600">🔍</button>
           </div>
 
           <div className="flex items-center space-x-6">
@@ -132,26 +123,20 @@ const ClientLayout = () => {
               <span>0 ₴</span>
             </Link>
 
-          <nav className="flex items-center space-x-4">
-            {localStorage.getItem("token") ? (
-              <>
-                <Link to="/profile" className="text-white text-2xl hover:text-orange-500">
-                    <FaUser />
-                </Link>
-                <button onClick={handleLogout} className="text-white text-2xl hover:text-orange-500">
-                  <FaSignOutAlt />
-                </button>
-              </>
-            ) : (
-              <Link to="/login" className="text-white text-2xl hover:text-orange-500">
-                  <FaSignInAlt />
-                </Link>
-            )}
-          </nav>
+            <nav className="flex items-center space-x-4">
+              {token ? (
+                <>
+                  <Link to="/profile" className="text-white text-2xl hover:text-orange-500"><FaUser /></Link>
+                  <button onClick={handleLogout} className="text-white text-2xl hover:text-orange-500">
+                    <FaSignOutAlt />
+                  </button>
+                </>
+              ) : (
+                <Link to="/login" className="text-white text-2xl hover:text-orange-500"><FaSignInAlt /></Link>
+              )}
+            </nav>
 
-            <Link to="/wishlist" className="hover:underline">
-              ❤️
-            </Link>
+            <Link to="/wishlist" className="hover:underline">❤️</Link>
           </div>
         </div>
       </header>
