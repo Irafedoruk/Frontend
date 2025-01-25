@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { ISubCategoryCreate, IUploadedFile } from "./types";
+import { ISubCategoryCreate, IUploadedFile } from "../../../../interfaces/subcategory";
 import { useGetCategoriesQuery } from "../../../../services/categoryApi";
 import { http_common } from "../../../../env";
 import {Link, useNavigate} from "react-router-dom";
