@@ -91,7 +91,7 @@ const ClientLayout = () => {
                           <ul className="p-4 space-y-2">
                             {filteredSubCategories.map((subCategory) => (
                               <li key={subCategory.id}>
-                                <Link to={`/subcategory/${subCategory.id}`} className="hover:underline">
+                                <Link to={`/subcategory/${subCategory.id}/products`} className="hover:underline">
                                   {subCategory.name}
                                 </Link>
                               </li>
