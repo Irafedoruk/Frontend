@@ -16,7 +16,7 @@ const ClientLayout = () => {
     hoveredCategory ?? -1,
     { skip: hoveredCategory === null }
   );
-
+  
   useEffect(() => {
     if (subCategoryData && hoveredCategory !== null) {
       const filtered = subCategoryData.filter(

@@ -46,3 +46,4 @@ export interface IUploadedFile {
     type: string;
     uid: string;
 }
+
