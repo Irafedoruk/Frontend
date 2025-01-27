@@ -18,8 +18,9 @@ const LoginPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        // Збереження токен у локальне сховище
-        localStorage.setItem("token", data.token);
+        console.log(data);  // Перевірте, чи є токен        
+        localStorage.setItem("token", data.accessToken); // Збереження токен у локальне сховище
+        console.log(localStorage.getItem("token"));  // Перевірте, чи є токен у localStorage
         alert("Успішний вхід");
         navigate("/"); // Перенаправлення на головну сторінку
       } else {

@@ -3,5 +3,7 @@ export interface User {
     firstname: string;
     lastname: string;
     email: string;
-    image?: string; // Поле необов'язкове
+    phoneNumber?: string; 
+    birthdate?: string;   
+    image?: string;       // Поле необов'язкове
 }
