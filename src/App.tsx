@@ -24,6 +24,7 @@ import ContactsPage from "./components/client/layout/ContactsPage";
 import PricingPolicyPage from "./components/client/layout/PricingPolicyPage.tsx";
 import CategoryPage from "./components/client/layout/CategoryPage.tsx";
 import ProductsPage from "./components/client/layout/ProductsPage.tsx";
+import ProfileEditPage from "./components/client/profile/ProfileEditPage.tsx";
 
 
 export default function App() {
@@ -67,6 +68,7 @@ export default function App() {
                     <Route path="login" element={<LoginPage />} />
                     <Route path="register" element={<RegisterPage />} />
                     <Route path="profile" element={<ProfilePage />} />
+                    <Route path="profile/edit" element={<ProfileEditPage />} />
 
                     <Route path="about" element={<AboutPage />} />
                     <Route path="contact" element={<ContactsPage />} />
