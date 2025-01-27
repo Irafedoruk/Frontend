@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthResponse } from "../../../interfaces/users/AuthResponse";
+import { authFetch } from "../../../interfaces/users/authFetch";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -8,19 +10,17 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
-      // запит до API
-      //const response = await fetch("/api/account/auth/login", {
-      const response = await fetch("/api/accounts/auth/login", {
+      const response = await authFetch("/api/accounts/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
-      });
-
+      }, () => navigate("/login")); // Pass a logout callback if necessary
+  
       if (response.ok) {
-        const data = await response.json();
-        console.log(data);  // Перевірте, чи є токен        
-        localStorage.setItem("token", data.accessToken); // Збереження токен у локальне сховище
-        console.log(localStorage.getItem("token"));  // Перевірте, чи є токен у localStorage
+        const data: AuthResponse = await response.json();
+        console.log(data);
+        localStorage.setItem("accessToken", data.accessToken);
+        localStorage.setItem("refreshToken", data.refreshToken);
         alert("Успішний вхід");
         navigate("/"); // Перенаправлення на головну сторінку
       } else {
@@ -74,9 +74,15 @@ const LoginPage = () => {
         </button>
       </form>
       <div className="mt-4 text-center">
-        <p>Ще не зареєстровані? <span
-          onClick={() => navigate("/register")}
-          className="text-blue-500 cursor-pointer">Зареєструйтесь</span></p>
+        <p>
+          Ще не зареєстровані?{" "}
+          <span
+            onClick={() => navigate("/register")}
+            className="text-blue-500 cursor-pointer"
+          >
+            Зареєструйтесь
+          </span>
+        </p>
       </div>
     </div>
   );

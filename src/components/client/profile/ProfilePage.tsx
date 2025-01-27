@@ -4,6 +4,7 @@ import axios from "axios";
 import Avatar from "react-avatar";
 import { API_URL } from "../../../env/index.ts";
 import { User } from "../../../interfaces/users/index.ts";
+import { authFetch } from "../../../interfaces/users/authFetch.ts";
 
 const ProfilePage = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -12,11 +13,21 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(`${API_URL}/api/Accounts/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser(response.data);
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+            throw new Error("No token found");
+          }
+
+        const response = await authFetch(`${API_URL}/api/Accounts/profile`, {
+          method: "GET",
+        }, () => alert("Session expired, please log in again")); // onLogout callback
+        if (response.ok) {
+            const data = await response.json();
+            setUser(data);
+          } else {
+            console.error("Failed to fetch user data");
+          }
+          
       } catch (error) {
         console.error("Error fetching user data:", error);
       }

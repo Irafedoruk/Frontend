@@ -5,7 +5,7 @@ import Footer from "./Footer";
 import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
 
 const ClientLayout = () => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("accessToken"); // Change to check for accessToken
   const [search, setSearch] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
@@ -16,7 +16,7 @@ const ClientLayout = () => {
     hoveredCategory ?? -1,
     { skip: hoveredCategory === null }
   );
-  
+
   useEffect(() => {
     if (subCategoryData && hoveredCategory !== null) {
       const filtered = subCategoryData.filter(
@@ -44,7 +44,8 @@ const ClientLayout = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     alert("Ви успішно вийшли з системи!");
     navigate("/");
   };
@@ -149,5 +150,6 @@ const ClientLayout = () => {
     </div>
   );
 };
+
 
 export default ClientLayout;

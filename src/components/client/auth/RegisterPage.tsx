@@ -4,8 +4,6 @@ const RegisterPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
   
     const handleRegister = async () => {
       if (password !== confirmPassword) {
@@ -17,7 +15,7 @@ const RegisterPage = () => {
         const response = await fetch("/api/accounts/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ firstName, lastName, email, password }),
+          body: JSON.stringify({ email, password }),
         });
   
         if (response.ok) {
