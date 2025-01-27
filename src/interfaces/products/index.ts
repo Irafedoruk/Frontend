@@ -11,7 +11,7 @@ export interface IProductItem {
     form: string,
     quantityInPack: number,
     quantityInStock: number,
-    //model: string,
+    modeles: string,
     subCategoryName: string,
     subCategoryId: number,
     description: string

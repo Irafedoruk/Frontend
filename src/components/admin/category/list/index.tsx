@@ -1,8 +1,4 @@
-// import {useEffect, useState} from "react";
-// import {ICategoryItem} from "./types.ts";
-
 import {Link} from "react-router-dom";
-// import {useGetPostsQuery} from "../../services/postApi.ts";
 import { API_URL} from "../../../../env/index.ts";
 import Loader from "../../../common/Loader/index.tsx";
 import { useGetCategoriesQuery, useDeleteCategoryMutation } from "../../../../services/categoryApi.ts";

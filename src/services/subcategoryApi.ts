@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { ISubCategoryItem } from "../components/admin/subcategory/list/types";
 import { API_URL } from "../env";
+import { ISubCategoryItem } from "../interfaces/subcategory";
 
 export const subcategoryApi = createApi({
     reducerPath: "subcategoryApi",

@@ -1,4 +1,3 @@
-import React from "react";
 import SidebarLinks from "./SidebarLinks"; // Імпортуємо SidebarLinks
 
 const AboutPage = () => {

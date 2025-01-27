@@ -22,6 +22,8 @@ import ProfilePage from "./components/client/profile/ProfilePage.tsx";
 import AboutPage from "./components/client/layout/AboutPage.tsx";
 import ContactsPage from "./components/client/layout/ContactsPage";
 import PricingPolicyPage from "./components/client/layout/PricingPolicyPage.tsx";
+import CategoryPage from "./components/client/layout/CategoryPage.tsx";
+import ProductsPage from "./components/client/layout/ProductsPage.tsx";
 
 
 export default function App() {
@@ -60,6 +62,8 @@ export default function App() {
                 {/* Layout для клієнтів */}
                 <Route path="/" element={<ClientLayout />}>
                     <Route index element={<HomePage />} />
+                    <Route path="/category/:id" element={<CategoryPage />} />
+                    <Route path="/subcategory/:id/products" element={<ProductsPage />} />
                     <Route path="login" element={<LoginPage />} />
                     <Route path="register" element={<RegisterPage />} />
                     <Route path="profile" element={<ProfilePage />} />
