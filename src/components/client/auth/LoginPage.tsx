@@ -2,11 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthResponse } from "../../../interfaces/users/AuthResponse";
 import { authFetch } from "../../../interfaces/users/authFetch";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { clearCart } from "../../../interfaces/cart/cartSlice";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogin = async () => {
     try {
@@ -21,6 +25,11 @@ const LoginPage = () => {
         console.log(data);
         localStorage.setItem("accessToken", data.accessToken);
         localStorage.setItem("refreshToken", data.refreshToken);
+        localStorage.setItem("userId", data.userId);
+
+        // Синхронізувати кошик
+        await syncCartToServer(data.accessToken);
+
         alert("Успішний вхід");
         navigate("/"); // Перенаправлення на головну сторінку
       } else {
@@ -28,6 +37,26 @@ const LoginPage = () => {
       }
     } catch (error) {
       console.error("Login error:", error);
+    }
+  };
+
+  const syncCartToServer = async (token: string) => {
+    const localCart = JSON.parse(localStorage.getItem("cartItems") || "[]");
+    const userId = localStorage.getItem("userId");
+  
+    if (localCart.length > 0 && userId) {
+      try {
+        await axios.post(
+          `http://localhost:5126/api/Cart/add?userId=${userId}`,
+          { items: localCart },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        console.log("Кошик синхронізовано з сервером");
+        localStorage.removeItem("cartItems");
+        dispatch(clearCart());
+      } catch (error) {
+        console.error("Помилка синхронізації кошика", error);
+      }
     }
   };
 

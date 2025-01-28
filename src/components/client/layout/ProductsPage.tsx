@@ -3,12 +3,44 @@ import { useGetProductsBySubCategoryIdQuery } from "../../../services/productApi
 import { API_URL } from "../../../env";
 import { IProductItem } from "../../../interfaces/products";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../../interfaces/cart/cartSlice";
+import axios from "axios";
 
 const ProductsPage = () => {
   const { id } = useParams(); // ID підкатегорії з URL
   const subCategoryId = Number(id);
   const { data: products, isLoading } = useGetProductsBySubCategoryIdQuery(subCategoryId);
   const [hoveredProductId, setHoveredProductId] = useState<number | null>(null);
+  const dispatch = useDispatch();
+
+  const handleAddToCart = async (product: IProductItem) => {
+    const token = localStorage.getItem("accessToken"); // Отримання токена з localStorage
+    const userId = localStorage.getItem("userId"); // Отримання userId з localStorage
+
+    if (token && userId) {
+      try {
+        await axios.post(
+          `${API_URL}/api/Cart/add`,
+          { userId, productId: product.id, quantity: 1 },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        console.log("Товар додано до кошика");
+      } catch (error) {
+        console.error("Помилка додавання товару", error);
+      }
+    } else {
+      // Якщо неавторизований — використовуємо Redux + LocalStorage
+      dispatch(
+        addToCart({
+          productId: product.id,
+          name: product.name,
+          price: product.price,
+          quantity: 1,
+        })
+      );
+    }
+  };
 
   if (isLoading) {
     return <div>Завантаження...</div>;
@@ -42,7 +74,7 @@ const ProductsPage = () => {
                     <span className="mx-2">1</span>
                     <button className="bg-gray-600 px-2 py-1 rounded-md">+</button>
                   </div>
-                  <button className="bg-orange-500 px-4 py-2 rounded-lg hover:bg-orange-600">Купити</button>
+                  <button onClick={() => handleAddToCart(product)} className="bg-orange-500 px-4 py-2 rounded-lg hover:bg-orange-600">Додати в кошик</button>
                 </div>
               </div>
             )}

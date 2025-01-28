@@ -3,6 +3,8 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useGetCategoriesQuery, useGetSubCategoriesByCategoryIdQuery } from "../../../services/categoryApi";
 import Footer from "./Footer";
 import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
 
 const ClientLayout = () => {
   const token = localStorage.getItem("accessToken"); // Change to check for accessToken
@@ -10,6 +12,8 @@ const ClientLayout = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
   const [filteredSubCategories, setFilteredSubCategories] = useState<any[]>([]);
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+  const cartTotal = cartItems.reduce((total, item) => total + item.quantity, 0); // Підрахунок кількості товарів
 
   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
   const { data: subCategoryData, isLoading: subCategoriesLoading } = useGetSubCategoriesByCategoryIdQuery(
@@ -121,6 +125,7 @@ const ClientLayout = () => {
           <div className="flex items-center space-x-6">
             <Link to="/cart" className="flex items-center space-x-2">
               <span>🛒</span>
+              <span>{cartTotal}</span> {/* Тут показуємо кількість товарів у кошику */}
               <span>0 ₴</span>
             </Link>
 
