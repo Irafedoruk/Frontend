@@ -1,4 +1,4 @@
-const API_URL = "/api/accounts";
+const API_URL = "/api/Accounts";
 
 const refreshTokens = async (onLogout: () => void): Promise<string | null> => {
   try {

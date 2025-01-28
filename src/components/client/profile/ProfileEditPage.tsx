@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { API_URL } from "../../../env/index.ts";
 import { User } from "../../../interfaces/users/index.ts";
+import { authFetch } from "../../../interfaces/users/authFetch.ts";
 
 const ProfileEditPage = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -18,24 +18,29 @@ const ProfileEditPage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(`${API_URL}/api/Accounts/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setUser(response.data);
-        setFormData({
-          firstname: response.data.firstname || "",
-          lastname: response.data.lastname || "",
-          phoneNumber: response.data.phoneNumber || "",
-          email: response.data.email || "",
-          birthdate: response.data.birthdate || "",
-        });
+        //const token = localStorage.getItem("token");
+        const response = await authFetch(`${API_URL}/api/Accounts/profile`, {
+          method: "GET",
+        }, () => navigate("/login")); // Перенаправлення при помилці токена
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data);
+          setFormData({
+            firstname: data.firstname || "",
+            lastname: data.lastname || "",
+            phoneNumber: data.phoneNumber || "",
+            email: data.email || "",
+            birthdate: data.birthdate || "",
+          });
+        } else {
+          console.error("Failed to fetch user data");
+        }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
     fetchUserData();
-  }, []);
+  }, [navigate]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -45,12 +50,19 @@ const ProfileEditPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-      await axios.put(`${API_URL}/api/Accounts/profile`, formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      alert("Профіль успішно оновлено!");
-      navigate("/profile");
+      const response = await authFetch(`${API_URL}/api/Accounts/profile`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      }, () => navigate("/login"));
+
+      if (response.ok) {
+        alert("Профіль успішно оновлено!");
+        navigate("/profile");
+      } else {
+        console.error("Failed to update profile");
+        alert("Сталася помилка при оновленні профілю.");
+      }
     } catch (error) {
       console.error("Error updating profile:", error);
       alert("Сталася помилка при оновленні профілю.");

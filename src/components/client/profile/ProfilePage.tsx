@@ -62,7 +62,14 @@ const ProfilePage = () => {
               <div className="p-4 bg-gray-100 rounded-md shadow">
                 <h4 className="font-semibold mb-2">Контактна інформація</h4>
                 <p><span className="font-bold">Телефон:</span> {user.phoneNumber || "Не вказано"}</p>
-                <p><span className="font-bold">Дата народження:</span> {user.birthdate || "Не вказано"}</p>
+                <p>
+                  <span className="font-bold">Дата народження:</span>{" "}
+                  {user.birthdate ? new Date(user.birthdate).toLocaleDateString("uk-UA", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  }) : "Не вказано"}
+                </p>
               </div>
             </div>
             <Link
