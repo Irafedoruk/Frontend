@@ -4,7 +4,7 @@ import { API_URL } from "../../../env";
 import { IProductItem } from "../../../interfaces/products";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../../interfaces/cart/cartSlice";
+import { addToCart, CartItem } from "../../../interfaces/cart/cartSlice";
 import axios from "axios";
 
 const ProductsPage = () => {
@@ -19,26 +19,57 @@ const ProductsPage = () => {
     const userId = localStorage.getItem("userId"); // Отримання userId з localStorage
 
     if (token && userId) {
+      // Якщо користувач авторизований
       try {
+        // Додавання товару до БД
         await axios.post(
           `${API_URL}/api/Cart/add`,
           { userId, productId: product.id, quantity: 1 },
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        console.log("Товар додано до кошика");
+        console.log("Товар додано до кошика в БД");
+
+        // Після додавання товару на сервер, потрібно оновити кошик в Redux
+        const updatedCartItem: CartItem = {
+        productId: product.id,
+        productName: product.name,
+        price: product.price,
+        quantity: 1,
+        images: product.images || [],
+        };
+        dispatch(addToCart(updatedCartItem));
+
+        // Також можна отримати оновлений кошик з серверу, якщо це необхідно
+        // await axios.get(`${API_URL}/api/Cart/${userId}`, { headers: { Authorization: `Bearer ${token}` } })
+        //   .then(response => {
+        //     dispatch(setCart(response.data)); // Замість addToCart можна використовувати setCart
+        //   });
+
       } catch (error) {
-        console.error("Помилка додавання товару", error);
+        console.error("Помилка додавання товару в БД", error);
       }
     } else {
-      // Якщо неавторизований — використовуємо Redux + LocalStorage
-      dispatch(
-        addToCart({
-          productId: product.id,
-          name: product.name,
-          price: product.price,
-          quantity: 1,
-        })
-      );
+      // Якщо неавторизований — використовуємо Redux для оновлення кошика
+      const cartItem: CartItem = {
+        productId: product.id,
+        productName: product.name,
+        price: product.price,
+        quantity: 1,
+        images: product.images || [], // Передаємо масив зображень або пустий масив
+      };
+
+      dispatch(addToCart(cartItem));
+
+      // Оновлення кошика в localStorage
+      const cartItems: CartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
+      const existingItem = cartItems.find(item => item.productId === product.id);
+      if (existingItem) {
+        existingItem.quantity += 1; // Якщо товар є, збільшуємо кількість
+      } else {
+        cartItems.push(cartItem); // Додаємо новий товар, якщо його немає
+      }
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+      console.log("Товар додано до кошика (неавторизований користувач)");
     }
   };
 
