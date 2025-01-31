@@ -4,7 +4,7 @@ import { AuthResponse } from "../../../interfaces/users/AuthResponse";
 import { authFetch } from "../../../interfaces/users/authFetch";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { addToCart, CartItem, clearCart } from "../../../interfaces/cart/cartSlice";
+import { addToCart, CartItem, cartSlice, clearCart } from "../../../interfaces/cart/cartSlice";
 import { API_URL } from "../../../env";
 
 const LoginPage = () => {
@@ -72,7 +72,7 @@ const LoginPage = () => {
             images: item.images || []
           }));
           
-          dispatch(addToCart(cartItems));  // Тепер передається відфільтрований масив товарів
+          dispatch(cartSlice.actions.addItemsToCart(cartItems));  // Тепер передається відфільтрований масив товарів
         }
       } catch (error) {
         console.error("Помилка отримання кошика з сервера", error);

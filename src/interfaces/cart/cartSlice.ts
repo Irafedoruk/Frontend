@@ -26,19 +26,21 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
-      const existingItem = state.items.find(
-        item => item.productId === action.payload.productId
-      );
+      const existingItem = state.items.find(item => item.productId === action.payload.productId);
       if (existingItem) {
-        existingItem.quantity += action.payload.quantity; // Збільшуємо кількість
+        existingItem.quantity += action.payload.quantity;
       } else {
-        state.items.push(action.payload); // Додаємо новий товар
+        state.items.push(action.payload);
       }
-      saveCartToLocalStorage(state.items); // Оновлення localStorage після зміни
+      saveCartToLocalStorage(state.items);
+    },
+    addItemsToCart: (state, action: PayloadAction<CartItem[]>) => {
+      state.items = action.payload;
+      saveCartToLocalStorage(state.items);
     },
     removeFromCart: (state, action: PayloadAction<number>) => {
       state.items = state.items.filter(item => item.productId !== action.payload);
-      saveCartToLocalStorage(state.items); // Оновлення localStorage після видалення
+      saveCartToLocalStorage(state.items);
     },
     clearCart: state => {
       state.items = [];
