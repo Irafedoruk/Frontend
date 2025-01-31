@@ -2,14 +2,16 @@ const API_URL = "/api/Accounts";
 
 const refreshTokens = async (onLogout: () => void): Promise<string | null> => {
   try {
-    const refreshToken = localStorage.getItem("refreshToken");
+    const accessToken = localStorage.getItem("accessToken") || "";
+    const refreshToken = localStorage.getItem("refreshToken") || "";
+    
     if (!refreshToken) throw new Error("Refresh token is missing");
 
     const response = await fetch(`${API_URL}/refreshTokens`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        accessToken: localStorage.getItem("accessToken"),
+        accessToken,
         refreshToken,
       }),
     });
