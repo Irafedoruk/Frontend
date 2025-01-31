@@ -4,7 +4,7 @@ import { API_URL } from "../../../env";
 import { IProductItem } from "../../../interfaces/products";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addToCart, CartItem } from "../../../interfaces/cart/cartSlice";
+import { addItemsToCart, addToCart, CartItem } from "../../../interfaces/cart/cartSlice";
 import axios from "axios";
 
 const ProductsPage = () => {
@@ -30,20 +30,21 @@ const ProductsPage = () => {
         console.log("Товар додано до кошика в БД");
 
         // Після додавання товару на сервер, потрібно оновити кошик в Redux
-        const updatedCartItem: CartItem = {
-        productId: product.id,
-        productName: product.name,
-        price: product.price,
-        quantity: 1,
-        images: product.images || [],
-        };
-        dispatch(addToCart(updatedCartItem));
-
-        // Також можна отримати оновлений кошик з серверу, якщо це необхідно
-        // await axios.get(`${API_URL}/api/Cart/${userId}`, { headers: { Authorization: `Bearer ${token}` } })
-        //   .then(response => {
-        //     dispatch(setCart(response.data)); // Замість addToCart можна використовувати setCart
-        //   });
+        const updatedCart = await axios.get(`${API_URL}/api/Cart/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+  
+        // Update the Redux state with the new cart
+        dispatch(addItemsToCart(updatedCart.data));
+        
+        // const updatedCartItem: CartItem = {
+        // productId: product.id,
+        // productName: product.name,
+        // price: product.price,
+        // quantity: 1,
+        // images: product.images || [],
+        // };
+        // dispatch(addToCart(updatedCartItem));        
 
       } catch (error) {
         console.error("Помилка додавання товару в БД", error);

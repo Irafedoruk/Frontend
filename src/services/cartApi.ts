@@ -8,7 +8,11 @@ export const getCart = async (userId: string) => {
 };
 
 export const addToCart = async (userId: string, productId: number, quantity: number) => {
-  await axios.post(`${API_URL}/add`, { userId, productId, quantity });
+  await axios.post(`${API_URL}/add`, [{ userId, productId, quantity }], {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 };
 
 export const removeFromCart = async (userId: string, productId: number) => {

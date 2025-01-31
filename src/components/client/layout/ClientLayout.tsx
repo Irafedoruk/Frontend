@@ -3,8 +3,9 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useGetCategoriesQuery, useGetSubCategoriesByCategoryIdQuery } from "../../../services/categoryApi";
 import Footer from "./Footer";
 import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
+import { clearCart } from "../../../interfaces/cart/cartSlice";
 
 const ClientLayout = () => {
   const token = localStorage.getItem("accessToken"); // Change to check for accessToken
@@ -14,6 +15,7 @@ const ClientLayout = () => {
   const [filteredSubCategories, setFilteredSubCategories] = useState<any[]>([]);
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const cartTotal = cartItems.reduce((total, item) => total + item.quantity, 0); // Підрахунок кількості товарів
+  const dispatch = useDispatch(); 
 
   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
   const { data: subCategoryData, isLoading: subCategoriesLoading } = useGetSubCategoriesByCategoryIdQuery(
@@ -50,6 +52,12 @@ const ClientLayout = () => {
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("cart");
+
+    // Очищення кошика в Redux
+    dispatch(clearCart());
+
     alert("Ви успішно вийшли з системи!");
     navigate("/");
   };

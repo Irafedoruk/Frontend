@@ -50,7 +50,7 @@ const CartPage: React.FC = () => {
             <li key={item.productId} className="bg-white p-4 shadow-md rounded-lg flex items-center justify-between">
               <div className="flex items-center">
                 <img
-                  src={item.images && item.images.length > 0 ? `${API_URL}/images/300_${item.images[0]}` : "/path-to-placeholder-image.jpg"}
+                  src={item.images && item.images.length > 0 ? `${API_URL}/images/300_${item.images[0]}` : "/path-to-placeholder-image.jpg"}                  
                   alt={item.productName}
                   className="w-20 h-20 object-cover rounded-md mr-4"
                 />
