@@ -52,6 +52,7 @@ export const authFetch = async (
 
   // Якщо токен прострочений, спробуємо оновити його
   if (response.status === 401) {
+    console.log("Problem token", 401);
     const newAccessToken = await refreshTokens(onLogout);
     if (newAccessToken) {
       options.headers = {

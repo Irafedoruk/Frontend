@@ -23,6 +23,8 @@ const ProfilePage = () => {
         }, () => alert("Session expired, please log in again")); // onLogout callback
         if (response.ok) {
             const data = await response.json();
+            console.log("Refresh token result ", data);
+
             setUser(data);
           } else {
             console.error("Failed to fetch user data");
