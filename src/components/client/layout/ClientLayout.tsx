@@ -14,7 +14,8 @@ const ClientLayout = () => {
   const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
   const [filteredSubCategories, setFilteredSubCategories] = useState<any[]>([]);
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  const cartTotal = cartItems.reduce((total, item) => total + item.quantity, 0); // Підрахунок кількості товарів
+  //const cartTotal = cartItems.reduce((total, item) => total + item.quantity, 0); // Підрахунок кількості товарів
+  const cartTotal = Array.isArray(cartItems) ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
   const dispatch = useDispatch(); 
 
   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();

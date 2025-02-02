@@ -29,23 +29,14 @@ const ProductsPage = () => {
         );
         console.log("Товар додано до кошика в БД");
 
-        // Після додавання товару на сервер, потрібно оновити кошик в Redux
-        const updatedCart = await axios.get(`${API_URL}/api/Cart/${userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-  
-        // Update the Redux state with the new cart
-        dispatch(addItemsToCart(updatedCart.data));
-        
-        // const updatedCartItem: CartItem = {
-        // productId: product.id,
-        // productName: product.name,
-        // price: product.price,
-        // quantity: 1,
-        // images: product.images || [],
-        // };
-        // dispatch(addToCart(updatedCartItem));        
-
+        // Оновлення кошика в Redux локально
+        dispatch(addToCart({
+          productId: product.id,
+          productName: product.name,
+          price: product.price,
+          quantity: 1,
+          images: product.images || [],
+        }));
       } catch (error) {
         console.error("Помилка додавання товару в БД", error);
       }
