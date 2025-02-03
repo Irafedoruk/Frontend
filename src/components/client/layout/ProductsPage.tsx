@@ -4,7 +4,7 @@ import { API_URL } from "../../../env";
 import { IProductItem } from "../../../interfaces/products";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addItemsToCart, addToCart, CartItem } from "../../../interfaces/cart/cartSlice";
+import { addToCart, CartItem } from "../../../interfaces/cart/cartSlice";
 import axios from "axios";
 
 const ProductsPage = () => {
@@ -12,11 +12,20 @@ const ProductsPage = () => {
   const subCategoryId = Number(id);
   const { data: products, isLoading } = useGetProductsBySubCategoryIdQuery(subCategoryId);
   const [hoveredProductId, setHoveredProductId] = useState<number | null>(null);
+  const [productQuantities, setProductQuantities] = useState<Record<number, number>>({});
   const dispatch = useDispatch();
+
+  const handleQuantityChange = (productId: number, increment: number) => {
+    setProductQuantities(prev => ({
+      ...prev,
+      [productId]: Math.max((prev[productId] || 1) + increment, 1),
+    }));
+  };
 
   const handleAddToCart = async (product: IProductItem) => {
     const token = localStorage.getItem("accessToken"); // Отримання токена з localStorage
     const userId = localStorage.getItem("userId"); // Отримання userId з localStorage
+    const quantity = productQuantities[product.id] || 1;
 
     if (token && userId) {
       // Якщо користувач авторизований
@@ -24,7 +33,7 @@ const ProductsPage = () => {
         // Додавання товару до БД
         await axios.post(
           `${API_URL}/api/Cart/add`,
-          { userId, productId: product.id, quantity: 1 },
+          { userId, productId: product.id, quantity },
           { headers: { Authorization: `Bearer ${token}` } }
         );
         console.log("Товар додано до кошика в БД");
@@ -34,7 +43,7 @@ const ProductsPage = () => {
           productId: product.id,
           productName: product.name,
           price: product.price,
-          quantity: 1,
+          quantity,
           images: product.images || [],
         }));
       } catch (error) {
@@ -46,7 +55,7 @@ const ProductsPage = () => {
         productId: product.id,
         productName: product.name,
         price: product.price,
-        quantity: 1,
+        quantity,
         images: product.images || [], // Передаємо масив зображень або пустий масив
       };
 
@@ -56,7 +65,7 @@ const ProductsPage = () => {
       const cartItems: CartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
       const existingItem = cartItems.find(item => item.productId === product.id);
       if (existingItem) {
-        existingItem.quantity += 1; // Якщо товар є, збільшуємо кількість
+        existingItem.quantity += quantity; // Якщо товар є, збільшуємо кількість
       } else {
         cartItems.push(cartItem); // Додаємо новий товар, якщо його немає
       }
@@ -93,9 +102,9 @@ const ProductsPage = () => {
               <div className="absolute bottom-0 left-0 right-0 bg-gray-800 bg-opacity-80 text-white p-4 transition-all duration-300 ease-in-out">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center">
-                    <button className="bg-gray-600 px-2 py-1 rounded-md">-</button>
-                    <span className="mx-2">1</span>
-                    <button className="bg-gray-600 px-2 py-1 rounded-md">+</button>
+                    <button onClick={() => handleQuantityChange(product.id, -1)} className="bg-gray-600 px-2 py-1 rounded-md">-</button>
+                    <span className="mx-2">{productQuantities[product.id] || 1}</span>
+                    <button onClick={() => handleQuantityChange(product.id, 1)} className="bg-gray-600 px-2 py-1 rounded-md">+</button>
                   </div>
                   <button onClick={() => handleAddToCart(product)} className="bg-orange-500 px-4 py-2 rounded-lg hover:bg-orange-600">Додати в кошик</button>
                 </div>
