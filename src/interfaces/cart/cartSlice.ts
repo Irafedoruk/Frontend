@@ -49,8 +49,17 @@ export const cartSlice = createSlice({
       state.items = [];
       localStorage.removeItem("cart");
     },
+    updateCartItemQuantity: (state, action: PayloadAction<{ productId: number; quantity: number }>) => {
+      const item = state.items.find(item => item.productId === action.payload.productId);
+      if (item) {
+        item.quantity = action.payload.quantity;
+        if (item.quantity <= 0) {
+          state.items = state.items.filter(item => item.productId !== action.payload.productId);
+        }
+      }
+    },
   },
 });
 
-export const { addToCart, addItemsToCart, removeFromCart, clearCart } = cartSlice.actions;
+export const { addToCart, updateCartItemQuantity, addItemsToCart, removeFromCart, clearCart } = cartSlice.actions;
 export default cartSlice.reducer;

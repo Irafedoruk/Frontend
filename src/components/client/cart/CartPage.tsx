@@ -3,16 +3,20 @@ import { API_URL } from '../../../env';
 import { addToCart, CartItem, removeFromCart } from '../../../interfaces/cart/cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store';
-import { removeFromCart as removeFromCartAPI } from '../../../services/cartApi'; // імпортуємо функцію для API
+//import { removeFromCart as removeFromCartAPI } from '../../../services/cartApi'; // імпортуємо функцію для API
+import axios from 'axios';
+import { updateCartItemQuantity } from '../../../interfaces/cart/cartSlice';
+import { useRemoveCartItemMutation, useUpdateCartItemQuantityMutation } from '../../../services/cartApi';
 
 const CartPage: React.FC = () => {
   const cart = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch(); 
   const [localCart, setLocalCart] = useState<CartItem[]>([]);
-  
-  // Отримуємо userId з authApi  
-  //const userId = useSelector((state: RootState) => state.auth.userId);
   const userId = localStorage.getItem("userId"); 
+  //const [updateCartItemQuantityMutation] = useUpdateCartItemQuantityMutation();
+  const [removeCartItem] = useRemoveCartItemMutation();
+  const [updateCartItemQuantityMutation] = useUpdateCartItemQuantityMutation();
+
   // Ініціалізація кошика з localStorage
   useEffect(() => {
     const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -24,38 +28,35 @@ const CartPage: React.FC = () => {
   }, []);
 
   const handleRemoveItem = async (productId: number) => {
-    if (!userId) {
-      console.error('User is not authenticated');
-      return; // Or show an error to the user
-    }
-
-    try {
-      // Виклик API для видалення товару
-      await removeFromCartAPI(userId, productId); // Pass the actual userId here
-      dispatch(removeFromCart(productId)); // Remove from local cart state
-
-      // Update localStorage
+    if (userId) {
+      try {
+        await removeCartItem({ userId, productId }).unwrap();
+        dispatch(removeFromCart(productId));
+      } catch (error) {
+        console.error("Не вдалося видалити товар із кошика:", error);
+      }
+    } else {
       const updatedCart = localCart.filter(item => item.productId !== productId);
       setLocalCart(updatedCart);
       localStorage.setItem("cart", JSON.stringify(updatedCart));
-    } catch (error) {
-      console.error('Failed to remove item from cart:', error);
-    } 
+      dispatch(removeFromCart(productId));
+    }
   };
 
 
-  const handleChangeQuantity = (item: CartItem, quantity: number) => {
-    if (quantity <= 0) return;
+  const handleChangeQuantity = async (productId: number, newQuantity: number) => {
+    if (newQuantity <= 0) return;
 
-    const updatedItem = { ...item, quantity };
-    dispatch(addToCart(updatedItem));
-
-    // Оновлення кількості в localStorage
-    const updatedCart = localCart.map(cartItem =>
-      cartItem.productId === item.productId ? updatedItem : cartItem
-    );
-    setLocalCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    if (userId) {
+      try {
+        await updateCartItemQuantityMutation({ userId, productId, quantity: newQuantity }).unwrap();
+        dispatch(updateCartItemQuantity({ productId, quantity: newQuantity }));
+      } catch (error) {
+        console.error('Failed to update quantity:', error);
+      }
+    } else {
+      dispatch(updateCartItemQuantity({ productId, quantity: newQuantity }));
+    }
   };
 
   return (
@@ -80,9 +81,11 @@ const CartPage: React.FC = () => {
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-                <button className="bg-orange-500 px-3 py-1 rounded-md text-white hover:bg-orange-600" onClick={() => handleChangeQuantity(item, item.quantity + 1)}>+</button>
-                <button className="bg-orange-500 px-3 py-1 rounded-md text-white hover:bg-orange-600" onClick={() => handleChangeQuantity(item, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
-                <button className="bg-red-500 px-3 py-1 rounded-md text-white hover:bg-red-600" onClick={() => handleRemoveItem(item.productId)}>Remove</button>
+              <button onClick={() => handleChangeQuantity(item.productId, item.quantity + 1)}>+</button>
+              <button onClick={() => handleChangeQuantity(item.productId, item.quantity - 1)}>-</button>
+              <button className="bg-red-500 px-3 py-1 rounded-md text-white hover:bg-red-600" 
+                  onClick={() => handleRemoveItem(item.productId)}>Remove
+              </button>
               </div>
             </li>
           ))}
