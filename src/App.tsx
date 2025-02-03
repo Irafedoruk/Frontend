@@ -26,6 +26,7 @@ import CategoryPage from "./components/client/layout/CategoryPage.tsx";
 import ProductsPage from "./components/client/layout/ProductsPage.tsx";
 import ProfileEditPage from "./components/client/profile/ProfileEditPage.tsx";
 import CartPage from "./components/client/cart/CartPage.tsx";
+import SearchResultsPage from "./components/client/products/SearchResultsPage.tsx";
 
 
 export default function App() {
@@ -71,6 +72,7 @@ export default function App() {
                     <Route path="profile" element={<ProfilePage />} />
                     <Route path="profile/edit" element={<ProfileEditPage />} />
                     <Route path="/cart" element={<CartPage />} />
+                    <Route path="/products/search" element={<SearchResultsPage />} />
 
                     <Route path="about" element={<AboutPage />} />
                     <Route path="contact" element={<ContactsPage />} />

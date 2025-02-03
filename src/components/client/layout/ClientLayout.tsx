@@ -6,6 +6,7 @@ import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { clearCart } from "../../../interfaces/cart/cartSlice";
+import { useGetProductsByNameQuery } from "../../../services/productApi";
 
 const ClientLayout = () => {
   const token = localStorage.getItem("accessToken"); // Change to check for accessToken
@@ -17,6 +18,8 @@ const ClientLayout = () => {
   //const cartTotal = cartItems.reduce((total, item) => total + item.quantity, 0); // Підрахунок кількості товарів
   const cartTotal = Array.isArray(cartItems) ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
   const dispatch = useDispatch(); 
+  const { data: searchResults } = useGetProductsByNameQuery(search);
+
 
   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
   const { data: subCategoryData, isLoading: subCategoriesLoading } = useGetSubCategoriesByCategoryIdQuery(
@@ -32,6 +35,12 @@ const ClientLayout = () => {
       setFilteredSubCategories(filtered);
     }
   }, [subCategoryData, hoveredCategory]);
+
+  useEffect(() => {
+    if (search.trim()) {
+      //refetch();
+    }
+  }, [search]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -62,6 +71,14 @@ const ClientLayout = () => {
     alert("Ви успішно вийшли з системи!");
     navigate("/");
   };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (search.trim()) {
+      navigate(`/products/search?name=${search.trim()}`); // Перехід на сторінку результатів
+    }
+  };
+  
 
   const navigate = useNavigate();
 
@@ -120,16 +137,18 @@ const ClientLayout = () => {
             )}
           </div>
 
-          <div className="flex items-center bg-white rounded-full px-3 py-2">
+          <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-full px-3 py-2">
             <input
               type="text"
               placeholder="Я шукаю..."
-              className="outline-none px-2 w-64"
+              className="outline-none px-2 w-64 text-black"
               value={search}
               onChange={handleSearch}
             />
-            <button className="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600">🔍</button>
-          </div>
+            <button type="submit" className="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600">
+              🔍
+            </button>
+          </form>
 
           <div className="flex items-center space-x-6">
             <Link to="/cart" className="flex items-center space-x-2">

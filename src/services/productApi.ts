@@ -21,6 +21,9 @@ export const productApi = createApi({
         getProductsBySubCategoryId: builder.query<IProductItem[], number>({
             query: (id) => `/products/bySubCategory/${id}`,
         }),
+        getProductsByName: builder.query<IProductItem[], string>({
+            query: (name) => `/products/search?query=${name}`,
+          }),
     }),
 });
 
@@ -28,4 +31,5 @@ export const {
     useGetProductsQuery,
     useDeleteProductMutation,
     useGetProductsBySubCategoryIdQuery,
+    useGetProductsByNameQuery,
 } = productApi;
