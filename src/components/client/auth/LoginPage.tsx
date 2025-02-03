@@ -86,18 +86,24 @@ const LoginPage = () => {
   
     if (localCart.length > 0 && userId) {
       try {
-        // Prepare cart items in the format the backend expects
-        const cartItems = localCart.map((item: CartItem) => ({
-          UserId: userId,
-          ProductId: item.productId,
-          Quantity: item.quantity,
-        }));
-        console.log(cartItems);
-        // Sync with the backend
-        await axios.post(`${API_URL}/api/Cart/add`, cartItems, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        console.log("Cart synced successfully");
+        console.log("Syncing cart with server:", localCart);
+  
+        for (const item of localCart) {
+          const response = await axios.post(
+            `${API_URL}/api/Cart/add`,
+            {
+              UserId: userId,
+              ProductId: item.productId,
+              Quantity: item.quantity
+            },
+            {
+              headers: { Authorization: `Bearer ${accessToken}` },
+            }
+          );
+          console.log("Item synced successfully:", response.data);
+        }
+  
+        // Очищення локального кошика після синхронізації
         localStorage.removeItem("cart");
         dispatch(clearCart());
       } catch (error) {
@@ -105,6 +111,7 @@ const LoginPage = () => {
       }
     }
   };
+  
       // try {
       //   for (const item of localCart) {
       //     const existingItem = await axios.get(`${API_URL}/api/Cart/${userId}/item/${item.productId}`, {

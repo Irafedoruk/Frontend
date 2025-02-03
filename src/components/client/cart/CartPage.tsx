@@ -49,13 +49,21 @@ const CartPage: React.FC = () => {
 
     if (userId) {
       try {
+        // Оновлення через API
         await updateCartItemQuantityMutation({ userId, productId, quantity: newQuantity }).unwrap();
         dispatch(updateCartItemQuantity({ productId, quantity: newQuantity }));
       } catch (error) {
         console.error('Failed to update quantity:', error);
       }
     } else {
+      // Оновлення в Redux
       dispatch(updateCartItemQuantity({ productId, quantity: newQuantity }));
+      // Оновлення в localStorage
+      const updatedCart = localCart.map(item =>
+        item.productId === productId ? { ...item, quantity: newQuantity } : item
+      );
+      setLocalCart(updatedCart);
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
     }
   };
 

@@ -58,7 +58,7 @@ const ProductsPage = () => {
         quantity,
         images: product.images || [], // Передаємо масив зображень або пустий масив
       };
-
+      // Оновлюємо кошик у Redux
       dispatch(addToCart(cartItem));
 
       // Оновлення кошика в localStorage
@@ -72,6 +72,7 @@ const ProductsPage = () => {
       localStorage.setItem("cart", JSON.stringify(cartItems));
       console.log("Товар додано до кошика (неавторизований користувач)");
     }
+    console.log("Додавання товару:", product, "Кількість:", quantity);
   };
 
   if (isLoading) {
