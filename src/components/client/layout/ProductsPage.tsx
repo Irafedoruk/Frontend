@@ -67,7 +67,7 @@ const ProductsPage = () => {
       if (existingItem) {
         existingItem.quantity += quantity; // Якщо товар є, збільшуємо кількість
       } else {
-        cartItems.push(cartItem); // Додаємо новий товар, якщо його немає
+        cartItems.push({ productId: product.id, productName: product.name, price: product.price, quantity, images: product.images || [] }); // Додаємо новий товар, якщо його немає
       }
       localStorage.setItem("cart", JSON.stringify(cartItems));
       console.log("Товар додано до кошика (неавторизований користувач)");

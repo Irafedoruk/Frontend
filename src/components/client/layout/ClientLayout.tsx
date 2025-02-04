@@ -6,23 +6,20 @@ import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { clearCart } from "../../../interfaces/cart/cartSlice";
-import { useGetProductsByNameQuery } from "../../../services/productApi";
+import Logo from "../../../assets/logo.png";
 
 const ClientLayout = () => {
-  const token = localStorage.getItem("accessToken"); // Change to check for accessToken
+  const token = localStorage.getItem("accessToken");
   const [search, setSearch] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
   const [filteredSubCategories, setFilteredSubCategories] = useState<any[]>([]);
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  //const cartTotal = cartItems.reduce((total, item) => total + item.quantity, 0); // Підрахунок кількості товарів
   const cartTotal = Array.isArray(cartItems) ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
   const dispatch = useDispatch(); 
-  const { data: searchResults } = useGetProductsByNameQuery(search);
-
 
   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
-  const { data: subCategoryData, isLoading: subCategoriesLoading } = useGetSubCategoriesByCategoryIdQuery(
+  const { data: subCategoryData } = useGetSubCategoriesByCategoryIdQuery(
     hoveredCategory ?? -1,
     { skip: hoveredCategory === null }
   );
@@ -35,12 +32,6 @@ const ClientLayout = () => {
       setFilteredSubCategories(filtered);
     }
   }, [subCategoryData, hoveredCategory]);
-
-  useEffect(() => {
-    if (search.trim()) {
-      //refetch();
-    }
-  }, [search]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -64,10 +55,7 @@ const ClientLayout = () => {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userId");
     localStorage.removeItem("cart");
-
-    // Очищення кошика в Redux
     dispatch(clearCart());
-
     alert("Ви успішно вийшли з системи!");
     navigate("/");
   };
@@ -75,17 +63,16 @@ const ClientLayout = () => {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (search.trim()) {
-      navigate(`/products/search?name=${search.trim()}`); // Перехід на сторінку результатів
+      navigate(`/products/search?name=${search.trim()}`);
     }
   };
-  
 
   const navigate = useNavigate();
 
   return (
-    <div>
-      <header className="bg-gray-800 text-white">
-        <div className="bg-gray-700 p-2 text-sm flex justify-between items-center">
+    <div className="bg-lightLavender text-darkPurple">
+      <header className="bg-lavender text-white shadow-md">
+        <div className="flex justify-between items-center p-2 bg-darkPurple text-sm">
           <div className="flex items-center space-x-4">
             <span>📚 <Link to="/books" className="hover:underline">Книги до зимових свят</Link></span>
             <span>🛒 Інтернет гуртівня книг №1 в Україні</span>
@@ -95,94 +82,505 @@ const ClientLayout = () => {
             <a href="tel:+380683010220" className="hover:underline">📞 +38 068 301-02-20</a>
           </div>
         </div>
-
-        <div className="flex items-center justify-between p-4">
-          <Link to="/" className="text-2xl font-bold">
-            <span className="text-orange-500">book</span>opt
+  
+        <div className="flex items-center justify-between p-2 bg-lightPink shadow-md">
+          <Link to="/" className="flex items-center space-x-2">
+            <img src={Logo} alt="Logo" className="h-16 w-auto ml-2" />
+            <span className="text-4xl font-extrabold text-darkPurple">
+              Ballons<span className="text-lavender">Shop</span>
+            </span>
           </Link>
+  
+          <button
+            onClick={toggleMenu}
+            className="bg-lavender text-white text-xl px-6 py-3 rounded-lg hover:bg-darkPurple transition duration-300"
+          >
+            📚 Каталог
+          </button>
+          {isMenuOpen && !categoriesLoading && categories && (
+  <div
+  className={`absolute left-0 w-full h-screen bg-white text-black shadow-lg z-10 flex transition-transform duration-500 ease-out transform ${
+    isMenuOpen ? "scale-y-100" : "scale-y-0"
+  } origin-top`}
+  style={{ top: "120px" }}
+>
 
-          <div className="relative">
-            <button onClick={toggleMenu} className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">
-              📚 Каталог
-            </button>
-
-            {isMenuOpen && !categoriesLoading && categories && (
-              <div className="absolute left-0 mt-2 w-64 bg-white text-black shadow-lg z-10">
-                <ul className="p-4 space-y-2">
-                  {categories.map((category) => (
-                    <li
-                      key={category.id}
-                      className="relative"
-                      onMouseEnter={() => handleCategoryHover(category.id)}
-                      onMouseLeave={handleCategoryLeave}
-                    >
-                      <Link to={`/category/${category.id}`} className="hover:underline">{category.name}</Link>
-                      {hoveredCategory === category.id && (
-                        <div className="absolute left-full top-0 mt-2 w-64 bg-white text-black shadow-lg">
-                          <ul className="p-4 space-y-2">
-                            {filteredSubCategories.map((subCategory) => (
-                              <li key={subCategory.id}>
-                                <Link to={`/subcategory/${subCategory.id}/products`} className="hover:underline">
-                                  {subCategory.name}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </li>
-                  ))}
+    <div className="w-1/4 p-4 bg-grayLight overflow-y-auto">
+      <ul className="space-y-4">
+        {categories.map((category) => (
+          <li
+            key={category.id}
+            className="relative group cursor-pointer"
+            onMouseEnter={() => handleCategoryHover(category.id)}
+            onMouseLeave={handleCategoryLeave}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            <Link to={`/category/${category.id}`} className="hover:underline">
+              {category.name}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+          
+  
+              {/* <div className="w-3/4 p-4 bg-white overflow-y-auto">
+                <ul className="space-y-4">
+                  {(filteredSubCategories.length > 0
+                    ? filteredSubCategories
+                    : categories.length > 0 && subCategoryData?.filter(sub => sub.categoryId === categories[0].id))
+                    ?.map((subCategory) => (
+                      <li key={subCategory.id} className="flex items-center space-x-4">
+                        <Link to={`/subcategory/${subCategory.id}/products`} className="hover:underline text-lavender">
+                          {subCategory.name}
+                        </Link>
+                        {subCategory.image && (
+                          <img src={subCategory.image} alt={subCategory.name} className="w-40 h-40 object-cover rounded-md" />
+                        )}
+                      </li>
+                    ))}
                 </ul>
-              </div>
-            )}
-          </div>
-
-          <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-full px-3 py-2">
+              </div> */}
+            </div>
+          )}
+  
+          <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-full px-4 py-2 shadow-md">
             <input
               type="text"
               placeholder="Я шукаю..."
-              className="outline-none px-2 w-64 text-black"
+              className="outline-none px-3 py-1 text-lg text-grayDark w-64"
               value={search}
               onChange={handleSearch}
             />
-            <button type="submit" className="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600">
+            <button
+              type="submit"
+              className="bg-lavender text-white text-lg px-5 py-2 rounded-full hover:bg-darkPurple transition duration-300"
+            >
               🔍
             </button>
           </form>
-
+  
           <div className="flex items-center space-x-6">
-            <Link to="/cart" className="flex items-center space-x-2">
+            <Link to="/cart" className="flex items-center space-x-2 text-xl">
               <span>🛒</span>
-              <span>{cartTotal}</span> {/* Тут показуємо кількість товарів у кошику */}
-              <span>0 ₴</span>
+              <span>{cartTotal}</span>
             </Link>
-
-            <nav className="flex items-center space-x-4">
+  
+            <nav className="flex items-center space-x-4 text-xl">
               {token ? (
                 <>
-                  <Link to="/profile" className="text-white text-2xl hover:text-orange-500"><FaUser /></Link>
-                  <button onClick={handleLogout} className="text-white text-2xl hover:text-orange-500">
-                    <FaSignOutAlt />
+                  <Link to="/profile" className="hover:text-mint"><FaUser size={24} /></Link>
+                  <button onClick={handleLogout} className="hover:text-mint">
+                    <FaSignOutAlt size={24} />
                   </button>
                 </>
               ) : (
-                <Link to="/login" className="text-white text-2xl hover:text-orange-500"><FaSignInAlt /></Link>
+                <Link to="/login" className="hover:text-mint">
+                  <FaSignInAlt size={24} />
+                </Link>
               )}
             </nav>
-
-            <Link to="/wishlist" className="hover:underline">❤️</Link>
+  
+            <Link to="/wishlist" className="hover:text-yellowAccent text-xl">❤️</Link>
           </div>
         </div>
       </header>
-
-      <main className="flex-1 container mx-auto py-6 px-6">
+  
+      <main className="container mx-auto py-6 px-6">
         <Outlet />
       </main>
-
+  
       <Footer />
     </div>
   );
+  
 };
 
-
 export default ClientLayout;
+
+
+// import { useEffect, useState } from "react";
+// import { Link, Outlet, useNavigate } from "react-router-dom";
+// import { useGetCategoriesQuery, useGetSubCategoriesByCategoryIdQuery } from "../../../services/categoryApi";
+// import Footer from "./Footer";
+// import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
+// import { useDispatch, useSelector } from "react-redux";
+// import { RootState } from "../../../store";
+// import { clearCart } from "../../../interfaces/cart/cartSlice";
+// import { useGetProductsByNameQuery } from "../../../services/productApi";
+// import Logo from "../../../assets/logo.png"; // Додайте логотип сюди
+
+// const ClientLayout = () => {
+//   const token = localStorage.getItem("accessToken");
+//   const [search, setSearch] = useState("");
+//   const [isMenuOpen, setIsMenuOpen] = useState(false);
+//   const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
+//   const [filteredSubCategories, setFilteredSubCategories] = useState<any[]>([]);
+//   const cartItems = useSelector((state: RootState) => state.cart.items);
+//   const cartTotal = Array.isArray(cartItems) ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
+//   const dispatch = useDispatch();
+//   const { data: searchResults } = useGetProductsByNameQuery(search);
+
+//   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
+//   const { data: subCategoryData, isLoading: subCategoriesLoading } = useGetSubCategoriesByCategoryIdQuery(
+//     hoveredCategory ?? -1,
+//     { skip: hoveredCategory === null }
+//   );
+
+//   useEffect(() => {
+//     if (subCategoryData && hoveredCategory !== null) {
+//       const filtered = subCategoryData.filter(
+//         (subCategory: any) => subCategory.categoryId === hoveredCategory
+//       );
+//       setFilteredSubCategories(filtered);
+//     }
+//   }, [subCategoryData, hoveredCategory]);
+
+//   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     setSearch(e.target.value);
+//   };
+
+//   const handleSearchSubmit = (e: React.FormEvent) => {
+//     e.preventDefault();
+//     if (search.trim()) {
+//       navigate(`/products/search?name=${search.trim()}`);
+//     }
+//   };
+
+//   const toggleMenu = () => {
+//     setIsMenuOpen(!isMenuOpen);
+//   };
+
+//   const handleCategoryHover = (categoryId: number) => {
+//     setHoveredCategory(categoryId);
+//   };
+
+//   const handleCategoryLeave = () => {
+//     setHoveredCategory(null);
+//     setFilteredSubCategories([]);
+//   };
+
+//   const handleLogout = () => {
+//     localStorage.removeItem("accessToken");
+//     localStorage.removeItem("refreshToken");
+//     localStorage.removeItem("userId");
+//     localStorage.removeItem("cart");
+//     dispatch(clearCart());
+//     alert("Ви успішно вийшли з системи!");
+//     navigate("/");
+//   };
+
+//   const navigate = useNavigate();
+
+//   return (
+//     <div className="bg-purple-50 text-purple-800">
+//       <header className="bg-purple-600 text-white shadow-md">
+//         <div className="flex justify-between items-center p-2 bg-purple-700 text-sm">
+//           <div className="flex items-center space-x-4">
+//             <span>📚 <Link to="/books" className="hover:underline">Книги до зимових свят</Link></span>
+//             <span>🛒 Інтернет гуртівня книг №1 в Україні</span>
+//             <span>🌱 <Link to="/eco" className="hover:underline">Екошопери</Link></span>
+//           </div>
+//           <div>
+//             <a href="tel:+380683010220" className="hover:underline">📞 +38 068 301-02-20</a>
+//           </div>
+//         </div>
+//           <div className="flex items-center justify-between p-2 bg-purple-100 shadow-md">
+//   <Link to="/" className="flex items-center space-x-2">
+//     <img src={Logo} alt="Logo" className="h-16 w-auto ml-2" /> {/* Збільшений логотип і зменшений відступ */}
+//     <span className="text-4xl font-extrabold text-purple-700">
+//       Ballons<span className="text-purple-500">Shop</span>
+//     </span> {/* Збільшений напис */}
+//   </Link>
+
+//   <button
+//     onClick={toggleMenu}
+//     className="bg-purple-700 text-white text-xl px-6 py-3 rounded-lg hover:bg-purple-800 transition duration-300"
+//   >
+//     📚 Каталог
+//   </button>
+
+
+
+//           {isMenuOpen && !categoriesLoading && categories && (
+//   <div className="absolute left-0 mt-2 w-64 bg-white text-black shadow-lg z-10">
+//   <ul className="p-4 space-y-2">
+//     {categories.map((category) => (
+//       <li
+//         key={category.id}
+//         className="relative group"
+//         onMouseEnter={() => handleCategoryHover(category.id)}
+//         onMouseLeave={handleCategoryLeave}
+//       >
+//         <Link to={`/category/${category.id}`} className="hover:underline">
+//           {category.name}
+//         </Link>
+
+//         {/* Підкатегорії */}
+//         {hoveredCategory === category.id && filteredSubCategories.length > 0 && (
+//           <div className="absolute left-full top-0 mt-0 w-64 bg-white text-black shadow-lg z-20">
+//             <ul className="p-4 space-y-2">
+//               {filteredSubCategories.map((subCategory) => (
+//                 <li key={subCategory.id}>
+//                   <Link
+//                     to={`/subcategory/${subCategory.id}/products`}
+//                     className="hover:underline text-purple-600"
+//                   >
+//                     {subCategory.name}
+//                   </Link>
+//                 </li>
+//               ))}
+//             </ul>
+//           </div>
+//         )}
+//       </li>
+//     ))}
+//   </ul>
+// </div>
+// )}
+
+
+          
+//   <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-full px-4 py-2 shadow-md">
+//     <input
+//       type="text"
+//       placeholder="Я шукаю..."
+//       className="outline-none px-3 py-1 text-lg text-gray-700 w-64"
+//       value={search}
+//       onChange={handleSearch}
+//     />
+//     <button
+//       type="submit"
+//       className="bg-purple-700 text-white text-lg px-5 py-2 rounded-full hover:bg-purple-800 transition duration-300"
+//     >
+//       🔍
+//     </button>
+//   </form>
+
+//           <div className="flex items-center space-x-6">
+//             <Link to="/cart" className="flex items-center space-x-2 text-xl">
+//               <span>🛒</span>
+//               <span>{cartTotal}</span>
+//             </Link>
+
+//             <nav className="flex items-center space-x-4 text-xl">
+//               {token ? (
+//                 <>
+//                   <Link to="/profile" className="hover:text-purple-300"><FaUser size={24} /></Link>
+//                   <button onClick={handleLogout} className="hover:text-purple-300">
+//                     <FaSignOutAlt size={24} />
+//                   </button>
+//                 </>
+//               ) : (
+//                 <Link to="/login" className="hover:text-purple-300">
+//                   <FaSignInAlt size={24} />
+//                 </Link>
+//               )}
+//             </nav>
+
+//             <Link to="/wishlist" className="hover:text-red-500 text-xl">❤️</Link>
+//           </div>
+//         </div>
+//       </header>
+
+//       <main className="container mx-auto py-6 px-6">
+//         <Outlet />
+//       </main>
+
+//       <Footer />
+//     </div>
+//   );
+// };
+
+// export default ClientLayout;
+
+
+
+// import { useEffect, useState } from "react";
+// import { Link, Outlet, useNavigate } from "react-router-dom";
+// import { useGetCategoriesQuery, useGetSubCategoriesByCategoryIdQuery } from "../../../services/categoryApi";
+// import Footer from "./Footer";
+// import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
+// import { useDispatch, useSelector } from "react-redux";
+// import { RootState } from "../../../store";
+// import { clearCart } from "../../../interfaces/cart/cartSlice";
+// import { useGetProductsByNameQuery } from "../../../services/productApi";
+
+// const ClientLayout = () => {
+//   const token = localStorage.getItem("accessToken"); // Change to check for accessToken
+//   const [search, setSearch] = useState("");
+//   const [isMenuOpen, setIsMenuOpen] = useState(false);
+//   const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
+//   const [filteredSubCategories, setFilteredSubCategories] = useState<any[]>([]);
+//   const cartItems = useSelector((state: RootState) => state.cart.items);
+//   //const cartTotal = cartItems.reduce((total, item) => total + item.quantity, 0); // Підрахунок кількості товарів
+//   const cartTotal = Array.isArray(cartItems) ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
+//   const dispatch = useDispatch(); 
+//   const { data: searchResults } = useGetProductsByNameQuery(search);
+
+
+//   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
+//   const { data: subCategoryData, isLoading: subCategoriesLoading } = useGetSubCategoriesByCategoryIdQuery(
+//     hoveredCategory ?? -1,
+//     { skip: hoveredCategory === null }
+//   );
+
+//   useEffect(() => {
+//     if (subCategoryData && hoveredCategory !== null) {
+//       const filtered = subCategoryData.filter(
+//         (subCategory: any) => subCategory.categoryId === hoveredCategory
+//       );
+//       setFilteredSubCategories(filtered);
+//     }
+//   }, [subCategoryData, hoveredCategory]);
+
+//   useEffect(() => {
+//     if (search.trim()) {
+//       //refetch();
+//     }
+//   }, [search]);
+
+//   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     setSearch(e.target.value);
+//   };
+
+//   const toggleMenu = () => {
+//     setIsMenuOpen(!isMenuOpen);
+//   };
+
+//   const handleCategoryHover = (categoryId: number) => {
+//     setHoveredCategory(categoryId);
+//   };
+
+//   const handleCategoryLeave = () => {
+//     setHoveredCategory(null);
+//     setFilteredSubCategories([]);
+//   };
+
+//   const handleLogout = () => {
+//     localStorage.removeItem("accessToken");
+//     localStorage.removeItem("refreshToken");
+//     localStorage.removeItem("userId");
+//     localStorage.removeItem("cart");
+
+//     // Очищення кошика в Redux
+//     dispatch(clearCart());
+
+//     alert("Ви успішно вийшли з системи!");
+//     navigate("/");
+//   };
+
+//   const handleSearchSubmit = (e: React.FormEvent) => {
+//     e.preventDefault();
+//     if (search.trim()) {
+//       navigate(`/products/search?name=${search.trim()}`); // Перехід на сторінку результатів
+//     }
+//   };
+  
+
+//   const navigate = useNavigate();
+
+//   return (
+//     <div>
+//       <header className="bg-gray-800 text-white">
+//         <div className="bg-gray-700 p-2 text-sm flex justify-between items-center">
+//           <div className="flex items-center space-x-4">
+//             <span>📚 <Link to="/books" className="hover:underline">Книги до зимових свят</Link></span>
+//             <span>🛒 Інтернет гуртівня книг №1 в Україні</span>
+//             <span>🌱 <Link to="/eco" className="hover:underline">Екошопери</Link></span>
+//           </div>
+//           <div>
+//             <a href="tel:+380683010220" className="hover:underline">📞 +38 068 301-02-20</a>
+//           </div>
+//         </div>
+
+//         <div className="flex items-center justify-between p-4">
+//           <Link to="/" className="text-2xl font-bold">
+//             <span className="text-orange-500">book</span>opt
+//           </Link>
+
+//           <div className="relative">
+//             <button onClick={toggleMenu} className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600">
+//               📚 Каталог
+//             </button>
+
+//             {isMenuOpen && !categoriesLoading && categories && (
+//               <div className="absolute left-0 mt-2 w-64 bg-white text-black shadow-lg z-10">
+//                 <ul className="p-4 space-y-2">
+//                   {categories.map((category) => (
+//                     <li
+//                       key={category.id}
+//                       className="relative"
+//                       onMouseEnter={() => handleCategoryHover(category.id)}
+//                       onMouseLeave={handleCategoryLeave}
+//                     >
+//                       <Link to={`/category/${category.id}`} className="hover:underline">{category.name}</Link>
+//                       {hoveredCategory === category.id && (
+//                         <div className="absolute left-full top-0 mt-2 w-64 bg-white text-black shadow-lg">
+//                           <ul className="p-4 space-y-2">
+//                             {filteredSubCategories.map((subCategory) => (
+//                               <li key={subCategory.id}>
+//                                 <Link to={`/subcategory/${subCategory.id}/products`} className="hover:underline">
+//                                   {subCategory.name}
+//                                 </Link>
+//                               </li>
+//                             ))}
+//                           </ul>
+//                         </div>
+//                       )}
+//                     </li>
+//                   ))}
+//                 </ul>
+//               </div>
+//             )}
+//           </div>
+
+//           <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-full px-3 py-2">
+//             <input
+//               type="text"
+//               placeholder="Я шукаю..."
+//               className="outline-none px-2 w-64 text-black"
+//               value={search}
+//               onChange={handleSearch}
+//             />
+//             <button type="submit" className="bg-orange-500 text-white px-4 py-2 rounded-full hover:bg-orange-600">
+//               🔍
+//             </button>
+//           </form>
+
+//           <div className="flex items-center space-x-6">
+//             <Link to="/cart" className="flex items-center space-x-2">
+//               <span>🛒</span>
+//               <span>{cartTotal}</span> {/* Тут показуємо кількість товарів у кошику */}
+//               <span>0 ₴</span>
+//             </Link>
+
+//             <nav className="flex items-center space-x-4">
+//               {token ? (
+//                 <>
+//                   <Link to="/profile" className="text-white text-2xl hover:text-orange-500"><FaUser /></Link>
+//                   <button onClick={handleLogout} className="text-white text-2xl hover:text-orange-500">
+//                     <FaSignOutAlt />
+//                   </button>
+//                 </>
+//               ) : (
+//                 <Link to="/login" className="text-white text-2xl hover:text-orange-500"><FaSignInAlt /></Link>
+//               )}
+//             </nav>
+
+//             <Link to="/wishlist" className="hover:underline">❤️</Link>
+//           </div>
+//         </div>
+//       </header>
+
+//       <main className="flex-1 container mx-auto py-6 px-6">
+//         <Outlet />
+//       </main>
+
+//       <Footer />
+//     </div>
+//   );
+// };
+
+
+// export default ClientLayout;
