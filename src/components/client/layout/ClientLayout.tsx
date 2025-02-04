@@ -86,8 +86,8 @@ const ClientLayout = () => {
         <div className="flex items-center justify-between p-2 bg-lightPink shadow-md">
           <Link to="/" className="flex items-center space-x-2">
             <img src={Logo} alt="Logo" className="h-16 w-auto ml-2" />
-            <span className="text-4xl font-extrabold text-darkPurple">
-              Ballons<span className="text-lavender">Shop</span>
+            <span className="text-4xl font-extrabold text-mint">
+              Ballons<span className="text-yellowAccent">Shop</span>
             </span>
           </Link>
   
