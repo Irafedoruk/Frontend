@@ -12,3 +12,13 @@ export interface IOrderItem {
     address: string;
     discountId?: number | null;
   }
+
+  export interface IOrder {
+    id: number;  // OrderId на бекенді
+    userId: string;
+    orderDate: string;  // Дата замовлення (ISO формат)
+    status: string;  // Статус замовлення
+    items: IOrderItem[]; // Список елементів замовлення
+    totalPrice: number; // Загальна сума замовлення
+    address: string;  // Адреса
+}
