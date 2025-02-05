@@ -7,12 +7,15 @@ import { RootState } from '../../../store';
 import axios from 'axios';
 import { updateCartItemQuantity } from '../../../interfaces/cart/cartSlice';
 import { useRemoveCartItemMutation, useUpdateCartItemQuantityMutation } from '../../../services/cartApi';
+import { useNavigate } from 'react-router-dom';
+
 
 const CartPage: React.FC = () => {
   const cart = useSelector((state: RootState) => state.cart.items);
   const dispatch = useDispatch(); 
   const [localCart, setLocalCart] = useState<CartItem[]>([]);
   const userId = localStorage.getItem("userId"); 
+  const navigate = useNavigate();
   //const [updateCartItemQuantityMutation] = useUpdateCartItemQuantityMutation();
   const [removeCartItem] = useRemoveCartItemMutation();
   const [updateCartItemQuantityMutation] = useUpdateCartItemQuantityMutation();
@@ -67,6 +70,15 @@ const CartPage: React.FC = () => {
     }
   };
 
+  const handleCheckout = () => {
+    if (cart.length === 0) {
+      alert("Your cart is empty!");
+      return;
+    }
+    // Перехід на сторінку оформлення замовлення за допомогою useNavigate
+    navigate('/checkout');
+  };
+
   return (
     <div className="container mx-auto py-6">
       <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
@@ -99,6 +111,14 @@ const CartPage: React.FC = () => {
           ))}
         </ul>
       )}
+      <div className="mt-6">
+        <button
+          className="bg-blue-500 px-4 py-2 text-white rounded-md hover:bg-blue-600"
+          onClick={handleCheckout}
+        >
+          Proceed to Checkout
+        </button>
+      </div>
     </div>
   );
 };

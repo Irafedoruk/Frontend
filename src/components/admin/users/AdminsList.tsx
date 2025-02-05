@@ -28,7 +28,7 @@ const AdminsList = () => {
                 <tbody>
                     {Array.isArray(admins) && admins.map((admin, index) => (
                         <tr key={admin.id} className={index % 2 === 0 ? "bg-gray-50" : ""}>
-                            <td className="px-4 py-2 border border-gray-300 text-center">{admin.id}</td>
+                            <td className="px-4 py-2 border border-gray-300 text-center">{index + 1}</td>
                             <td className="px-4 py-2 border border-gray-300 text-center">{admin.firstname}</td>
                             <td className="px-4 py-2 border border-gray-300 text-center">{admin.lastname}</td>
                             <td className="px-4 py-2 border border-gray-300 text-center">{admin.email}</td>
