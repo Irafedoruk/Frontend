@@ -3,13 +3,13 @@ import { FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 
 const Footer = () => {
     return (
-        <footer className="bg-lightPink text-darkPurple py-8 relative">
+        <footer className="bg-lavender text-white py-8 relative">
             {/* Thin Top Line with Elevated Inverted Shadow */}
-            <div className="h-0.5 bg-lavender shadow-md" style={{ boxShadow: '0 -2px 4px -5px rgba(75, 0, 130, 0.5)', position: 'absolute', top: '-2px', left: 0, right: 0 }}></div>
+            <div className="h-0.5 bg-darkPurple shadow-md" style={{ boxShadow: '0 -2px 4px -1px rgba(75, 0, 130, 0.5)', position: 'absolute', top: '-2px', left: 0, right: 0 }}></div>
             <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Лого та соціальні мережі */}
                 <div className="flex flex-col items-center md:items-start">
-                    <h2 className="text-2xl font-bold mb-4">Ballons<span className="text-lavender">Shop</span></h2>
+                    <h2 className="text-2xl font-bold mb-4">Ballons<span className="text-white">Shop</span></h2>
                     <div className="flex space-x-4">
                         <a href="#" aria-label="Instagram" className="hover:text-darkPurple hover:scale-110 transition duration-200">
                             <FaInstagram className="w-6 h-6" />
@@ -79,7 +79,7 @@ const Footer = () => {
             </div>
 
             {/* Нижній рядок футера */}
-            <div className="mt-8 bg-lightLavender border-t border-lavender pt-4 text-center">
+            <div className="mt-8 bg-lightLavender border-t border-lavender pt-4 text-center text-lavender">
                 <p>© {new Date().getFullYear()} BallonsShop. Всі права захищені.</p>
             </div>
         </footer>

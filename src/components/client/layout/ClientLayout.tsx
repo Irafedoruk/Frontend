@@ -70,9 +70,9 @@ const ClientLayout = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-lightLavender text-darkPurple">
-      <header className="bg-lavender text-white shadow-md">
-        <div className="flex justify-between items-center p-2 bg-darkPurple text-sm">
+    <div className="bg-grayLight text-darkPurple">
+      <header className="bg-lavender text-grayDark shadow-md">
+        <div className="flex justify-between items-center p-2 bg-grayLight text-sm">
           <div className="flex items-center space-x-4">
             <span>📚 <Link to="/books" className="hover:underline">Книги до зимових свят</Link></span>
             <span>🛒 Інтернет гуртівня книг №1 в Україні</span>
@@ -83,17 +83,17 @@ const ClientLayout = () => {
           </div>
         </div>
   
-        <div className="flex items-center justify-between p-2 bg-lightPink shadow-md">
+        <div className="flex items-center justify-between p-2 bg-lavender shadow-md">
           <Link to="/" className="flex items-center space-x-2">
             <img src={Logo} alt="Logo" className="h-16 w-auto ml-2" />
-            <span className="text-4xl font-extrabold text-mint">
-              Ballons<span className="text-yellowAccent">Shop</span>
+            <span className="text-4xl font-extrabold text-lightLavender">
+              Ballons<span className="text-lightLavender">Shop</span>
             </span>
           </Link>
   
           <button
             onClick={toggleMenu}
-            className="bg-lavender text-white text-xl px-6 py-3 rounded-lg hover:bg-darkPurple transition duration-300"
+            className="bg-mint text-grayDark text-xl px-6 py-3 rounded-lg hover:bg-darkPurple transition duration-300"
           >
             📚 Каталог
           </button>
@@ -154,7 +154,7 @@ const ClientLayout = () => {
             />
             <button
               type="submit"
-              className="bg-lavender text-white text-lg px-5 py-2 rounded-full hover:bg-darkPurple transition duration-300"
+              className="bg-mint text-white text-lg px-5 py-2 rounded-full hover:bg-darkPurple transition duration-300"
             >
               🔍
             </button>
