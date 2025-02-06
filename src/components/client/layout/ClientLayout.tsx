@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { clearCart } from "../../../interfaces/cart/cartSlice";
 import Logo from "../../../assets/logo.png";
+import { useGetProductsByNameQuery } from "../../../services/productApi";
+
 
 const ClientLayout = () => {
   const token = localStorage.getItem("accessToken");
@@ -17,6 +19,11 @@ const ClientLayout = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const cartTotal = Array.isArray(cartItems) ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
   const dispatch = useDispatch(); 
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const { data: searchResults } = useGetProductsByNameQuery(search, {
+    skip: search.length < 3,
+  });
+  
 
   const { data: categories, isLoading: categoriesLoading } = useGetCategoriesQuery();
   const { data: subCategoryData } = useGetSubCategoriesByCategoryIdQuery(
@@ -34,8 +41,17 @@ const ClientLayout = () => {
   }, [subCategoryData, hoveredCategory]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
+    const value = e.target.value;
+    console.log("🔍 Введений пошуковий запит:", value);
+    setSearch(value);
+    setShowSuggestions(value.length >= 3);
+};
+
+  const handleSuggestionClick = (productId: number) => {
+    navigate(`/product/${productId}`);
+    setShowSuggestions(false);
   };
+    
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -63,9 +79,15 @@ const ClientLayout = () => {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (search.trim()) {
-      navigate(`/products/search?name=${search.trim()}`);
+        console.log("📡 Відправка запиту на API:", search);
+        navigate(`/product/${searchResults?.[0]?.id}`);
+        setShowSuggestions(false);
+    } else {
+        console.warn("⚠️ Порожній запит не відправляється!");
     }
-  };
+};
+
+  
 
   const navigate = useNavigate();
 
@@ -158,6 +180,20 @@ const ClientLayout = () => {
             >
               🔍
             </button>
+            {showSuggestions && searchResults && searchResults.length > 0 && (
+  <ul className="absolute top-full left-0 w-full bg-white shadow-md rounded-md mt-1 max-h-40 overflow-y-auto">
+    {searchResults?.map((product) => (
+      <li
+        key={product.id}
+        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+        onClick={() => handleSuggestionClick(product.id)}
+      >
+        {product.name}
+      </li>
+    ))}
+  </ul>
+)}
+
           </form>
   
           <div className="flex items-center space-x-6">

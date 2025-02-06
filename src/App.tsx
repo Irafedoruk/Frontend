@@ -28,6 +28,7 @@ import ProfileEditPage from "./components/client/profile/ProfileEditPage.tsx";
 import CartPage from "./components/client/cart/CartPage.tsx";
 import SearchResultsPage from "./components/client/products/SearchResultsPage.tsx";
 import CheckoutPage from "./components/client/orders/CheckoutPage.tsx";
+import ProductPage from "./components/client/layout/ProductPage";
 
 
 export default function App() {
@@ -78,7 +79,7 @@ export default function App() {
                     <Route path="about" element={<AboutPage />} />
                     <Route path="contact" element={<ContactsPage />} />
                     <Route path="pricing-policy" element={<PricingPolicyPage />} />
-                    {/* <Route path="about" element={<AboutPage />} /> */}
+                    <Route path="/product/:id" element={<ProductPage />}/>
 
                 </Route>
                 {/* Сторінка 404 */}

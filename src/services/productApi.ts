@@ -21,14 +21,27 @@ export const productApi = createApi({
         getProductsBySubCategoryId: builder.query<IProductItem[], number>({
             query: (id) => `/products/bySubCategory/${id}`,
         }),
+        // getProductsByName: builder.query<IProductItem[], string>({
+        //     query: (name) => `/products/search?query=${name}`,
+        //   }),
+        // getProductsByName: builder.query<IProductItem[], string>({
+        //     query: (name) => `/products/search?query=${encodeURIComponent(name)}`, // Кодуємо параметр
+        // }),
         getProductsByName: builder.query<IProductItem[], string>({
-            query: (name) => `/products/search?query=${name}`,
-          }),
+            query: (name) => `/products/search?name=${encodeURIComponent(name)}`, // Оновлено параметр name
+        }),
+        
+        
+          getProductById: builder.query<IProductItem, number>({
+            query: (id) => `/products/${id}`,
+        }),
+        
     }),
 });
 
 export const {
     useGetProductsQuery,
+    useGetProductByIdQuery,
     useDeleteProductMutation,
     useGetProductsBySubCategoryIdQuery,
     useGetProductsByNameQuery,

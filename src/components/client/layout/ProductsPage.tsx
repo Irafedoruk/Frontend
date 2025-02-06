@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetProductsBySubCategoryIdQuery } from "../../../services/productApi";
 import { API_URL } from "../../../env";
 import { IProductItem } from "../../../interfaces/products";
@@ -94,11 +94,14 @@ const ProductsPage = () => {
             onMouseEnter={() => setHoveredProductId(product.id)}
             onMouseLeave={() => setHoveredProductId(null)}
           >
-            <img
-              src={`${API_URL}/images/600_${product.images[0]}`}
-              alt={product.name}
-              className="w-full h-40 object-cover rounded-t-lg"
-            />
+            <Link to={`/product/${product.id}`} className="block">
+              <img
+                src={`${API_URL}/images/600_${product.images[0]}`}
+                alt={product.name}
+                className="w-full h-40 object-cover rounded-t-lg"
+              />
+              <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
+            </Link>
             {hoveredProductId === product.id && (
               <div className="absolute bottom-0 left-0 right-0 bg-gray-800 bg-opacity-80 text-white p-4 transition-all duration-300 ease-in-out">
                 <div className="flex justify-between items-center">
@@ -111,7 +114,6 @@ const ProductsPage = () => {
                 </div>
               </div>
             )}
-            <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
             <p>Модель: {product.modeles}</p>
             <p>Код: {product.code}</p>
             <p>Розмір: {product.size}</p>
@@ -123,5 +125,6 @@ const ProductsPage = () => {
     </div>
   );
 };
+
 
 export default ProductsPage;
