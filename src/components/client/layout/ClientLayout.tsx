@@ -121,51 +121,99 @@ const ClientLayout = () => {
           </button>
           {isMenuOpen && !categoriesLoading && categories && (
   <div
-  className={`absolute left-0 w-full h-screen bg-white text-black shadow-lg z-10 flex transition-transform duration-500 ease-out transform ${
-    isMenuOpen ? "scale-y-100" : "scale-y-0"
-  } origin-top`}
-  style={{ top: "120px" }}
->
-
-    <div className="w-1/4 p-4 bg-grayLight overflow-y-auto">
-      <ul className="space-y-4">
+    className="absolute left-0 top-0 w-[500px] h-screen bg-white text-black shadow-lg z-50 flex"
+    onMouseEnter={() => setIsMenuOpen(true)}
+    onMouseLeave={() => setIsMenuOpen(false)}
+  >
+    {/* Ліва панель категорій */}
+    <div className="w-[250px] bg-gray-100 p-4">
+      <ul className="space-y-2">
         {categories.map((category) => (
           <li
             key={category.id}
-            className="relative group cursor-pointer"
+            className={`flex justify-between items-center px-4 py-2 cursor-pointer transition-all duration-300 ${
+              hoveredCategory === category.id ? "bg-gray-300" : ""
+            }`}
             onMouseEnter={() => handleCategoryHover(category.id)}
-            onMouseLeave={handleCategoryLeave}
-            onClick={() => setIsMenuOpen(false)}
           >
-            <Link to={`/category/${category.id}`} className="hover:underline">
-              {category.name}
-            </Link>
+            <span>{category.name}</span>
+            <span className="text-gray-500">›</span>
           </li>
         ))}
       </ul>
     </div>
-          
-  
-              {/* <div className="w-3/4 p-4 bg-white overflow-y-auto">
-                <ul className="space-y-4">
-                  {(filteredSubCategories.length > 0
-                    ? filteredSubCategories
-                    : categories.length > 0 && subCategoryData?.filter(sub => sub.categoryId === categories[0].id))
-                    ?.map((subCategory) => (
-                      <li key={subCategory.id} className="flex items-center space-x-4">
-                        <Link to={`/subcategory/${subCategory.id}/products`} className="hover:underline text-lavender">
-                          {subCategory.name}
-                        </Link>
-                        {subCategory.image && (
-                          <img src={subCategory.image} alt={subCategory.name} className="w-40 h-40 object-cover rounded-md" />
-                        )}
-                      </li>
-                    ))}
-                </ul>
-              </div> */}
-            </div>
-          )}
-  
+
+    {/* Права панель підкатегорій (при наведенні на категорію) */}
+    {hoveredCategory && filteredSubCategories.length > 0 && (
+      <div
+        className="w-[250px] bg-white shadow-md p-4 border-l border-gray-300 transition-opacity duration-300"
+        onMouseEnter={() => setHoveredCategory(hoveredCategory)}
+        onMouseLeave={() => setHoveredCategory(null)}
+      >
+        <h3 className="font-bold text-lg mb-2">Підкатегорії</h3>
+        <ul className="space-y-2">
+          {filteredSubCategories.map((subCategory) => (
+            <li key={subCategory.id}>
+              <Link
+                to={`/subcategory/${subCategory.id}/products`}
+                className="text-gray-800 hover:text-gray-500 transition-all"
+              >
+                {subCategory.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+)}
+
+          {/* {isMenuOpen && !categoriesLoading && categories && (
+  <div
+    className={`absolute left-0 w-full h-screen bg-white text-black shadow-lg z-10 flex transition-transform duration-500 ease-out transform ${
+      isMenuOpen ? "scale-y-100" : "scale-y-0"
+    } origin-top`}
+    style={{ top: "120px" }}
+  > */}
+    {/* Ліва колонка з категоріями */}
+    {/* <div className="w-1/3 bg-gray-100 p-4">
+      <ul>
+        {categories.map((category) => (
+          <li
+            key={category.id}
+            className={`flex justify-between items-center px-4 py-2 cursor-pointer ${
+              hoveredCategory === category.id ? "bg-gray-200" : ""
+            }`}
+            onMouseEnter={() => handleCategoryHover(category.id)}
+            onMouseLeave={handleCategoryLeave}
+          >
+            <span>{category.name}</span>
+            <span className="text-gray-500">›</span>
+          </li>
+        ))}
+      </ul>
+    </div> */}
+
+    {/* Права колонка з підкатегоріями */}
+    {/* {hoveredCategory && filteredSubCategories.length > 0 && (
+      <div className="w-2/3 bg-white shadow-lg p-4">
+        <h3 className="font-bold text-lg mb-2">Підкатегорії</h3>
+        <ul className="space-y-2">
+          {filteredSubCategories.map((subCategory) => (
+            <li key={subCategory.id}>
+              <Link
+                to={`/subcategory/${subCategory.id}/products`}
+                className="text-gray-800 hover:underline"
+              >
+                {subCategory.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+)}  */}
           <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-full px-4 py-2 shadow-md">
             <input
               type="text"
