@@ -42,11 +42,22 @@ const ProductPage = () => {
   return (
     <div className="container mx-auto py-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <img
+        {/* <img
           src={`${API_URL}/images/300_${product.images[0]}`}
           alt={product.name}
           className="w-full object-cover rounded-lg"
-        />
+        /> */}
+        {product.images?.length > 0 ? (
+  <img
+    src={`${API_URL}/images/1200_${product.images[0]}`} // або `${API_URL}/images/300_${product.images[0]}`
+    alt={product.name}
+    className="w-full h-auto max-h-[500px] object-contain rounded-lg"
+  />
+) : (
+  <div className="w-full h-80 flex items-center justify-center bg-gray-200 text-gray-500">
+    Зображення відсутнє
+  </div>
+)}
 
         <div>
           <h1 className="text-2xl font-bold">{product.name}</h1>

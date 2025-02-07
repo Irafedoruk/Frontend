@@ -135,6 +135,10 @@ const ClientLayout = () => {
               hoveredCategory === category.id ? "bg-gray-300" : ""
             }`}
             onMouseEnter={() => handleCategoryHover(category.id)}
+            onClick={() => {
+              navigate(`/category/${category.id}`);
+              setIsMenuOpen(false); // Закриває меню після натискання
+            }}
           >
             <span>{category.name}</span>
             <span className="text-gray-500">›</span>
@@ -157,6 +161,9 @@ const ClientLayout = () => {
               <Link
                 to={`/subcategory/${subCategory.id}/products`}
                 className="text-gray-800 hover:text-gray-500 transition-all"
+                onClick={() => {
+                  setIsMenuOpen(false); // Закриває меню після натискання
+                }}
               >
                 {subCategory.name}
               </Link>
@@ -167,6 +174,7 @@ const ClientLayout = () => {
     )}
   </div>
 )}
+
 
           {/* {isMenuOpen && !categoriesLoading && categories && (
   <div
