@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthResponse } from "../../../interfaces/users/AuthResponse";
 import { authFetch } from "../../../interfaces/users/authFetch";
 import { useDispatch } from "react-redux";
@@ -196,12 +196,11 @@ const LoginPage = () => {
       <div className="mt-4 text-center">
         <p>
           Ще не зареєстровані?{" "}
-          <span
-            onClick={() => navigate("/register")}
+          <Link to="/register"
             className="text-blue-500 cursor-pointer"
           >
-            Зареєструйтесь
-          </span>
+            Зареєструйтесь--
+          </Link>
         </p>
       </div>
     </div>
