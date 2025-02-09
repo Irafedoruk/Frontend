@@ -71,6 +71,7 @@ const ClientLayout = () => {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userId");
     localStorage.removeItem("cart");
+    localStorage.removeItem("isAdmin");
     dispatch(clearCart());
     alert("Ви успішно вийшли з системи!");
     navigate("/");

@@ -4,7 +4,7 @@ import { AuthResponse } from "../../../interfaces/users/AuthResponse";
 import { authFetch } from "../../../interfaces/users/authFetch";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { addToCart, CartItem, cartSlice, clearCart } from "../../../interfaces/cart/cartSlice";
+import { cartSlice, clearCart } from "../../../interfaces/cart/cartSlice";
 import { API_URL } from "../../../env";
 
 const LoginPage = () => {
@@ -20,6 +20,10 @@ const LoginPage = () => {
     if (userId && token) {
       fetchCartFromServer(token);
     }
+    if (!userId || !token) {
+      // Якщо користувач не авторизований, видаляємо роль
+      localStorage.removeItem("isAdmin");
+    }
   }, []); // Виконувати тільки один раз після завантаження компонента
   
   const handleLogin = async () => {
@@ -33,9 +37,26 @@ const LoginPage = () => {
       if (response.ok) {
         const data: AuthResponse = await response.json();
         console.log(data);
+
         localStorage.setItem("accessToken", data.accessToken);
         localStorage.setItem("refreshToken", data.refreshToken);
         localStorage.setItem("userId", data.userId);
+        //console.log("Saving isAdmin:", data.isAdmin);
+        localStorage.setItem("isAdmin", JSON.stringify(data.isAdmin));
+        //console.log("Is Admin saved:", localStorage.getItem("isAdmin"));
+
+        // Перевірка чи є адміністратор
+        const isAdmin = JSON.parse(localStorage.getItem("isAdmin") || "false");
+        //console.log("Is Admin from localStorage:", isAdmin);
+
+        // Перевірка чи є адміністратором
+        if (isAdmin) {
+          //alert("Ви увійшли як адміністратор");
+          navigate("/admin");
+        } else {
+          //alert("Успішний вхід як звичайний користувач");
+          navigate("/");
+        }
 
         // Синхронізувати кошик
         await syncCartToServer(data.accessToken);
@@ -43,8 +64,8 @@ const LoginPage = () => {
         // Отримати кошик користувача з сервера
         await fetchCartFromServer(data.accessToken);
 
-        alert("Успішний вхід");
-        navigate("/"); // Перенаправлення на головну сторінку
+        //alert("Успішний вхід");
+        //navigate("/"); // Перенаправлення на головну сторінку
       } else {
         alert("Невірний логін або пароль");
       }
@@ -199,7 +220,7 @@ const LoginPage = () => {
           <Link to="/register"
             className="text-blue-500 cursor-pointer"
           >
-            Зареєструйтесь--
+            Зареєструйтесь
           </Link>
         </p>
       </div>

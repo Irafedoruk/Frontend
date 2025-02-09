@@ -49,7 +49,7 @@ const ProductPage = () => {
         /> */}
         {product.images?.length > 0 ? (
   <img
-    src={`${API_URL}/images/300_${product.images[0]}`} // або `${API_URL}/images/300_${product.images[0]}`
+    src={`${API_URL}/images/1200_${product.images[0]}`} // або `${API_URL}/images/300_${product.images[0]}`
     alt={product.name}
     className="w-full h-auto max-h-[500px] object-contain rounded-lg"
   />
