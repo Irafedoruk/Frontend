@@ -29,6 +29,7 @@ import CartPage from "./components/client/cart/CartPage.tsx";
 import SearchResultsPage from "./components/client/products/SearchResultsPage.tsx";
 import CheckoutPage from "./components/client/orders/CheckoutPage.tsx";
 import ProductPage from "./components/client/layout/ProductPage";
+import PrivateRoute from "./components/admin/PrivateRoute.tsx";
 
 
 export default function App() {
@@ -36,32 +37,34 @@ export default function App() {
         <>
             <Routes>
                 {/* Маршрути адміністратора */}
-                <Route path="/admin" element={<AdminLayout />}>
-                    <Route index element={<h1>Головна сторінка адміністратора</h1>} />
+                <Route path="/admin" element={<PrivateRoute />}>
+                    <Route path="/admin" element={<AdminLayout />}>
+                        <Route index element={<h1>Головна сторінка адміністратора</h1>} />
 
-                    {/* Категорії */}
-                    <Route path="categories" element={<CategoriesListPage />} />
-                    <Route path="categories/create" element={<CategoryCreatePage />} />
-                    <Route path="categories/edit/:id" element={<CategoryEditPage />} />
-                    <Route path="categories/view/:id" element={<CategoryViewPage />} />
+                        {/* Категорії */}
+                        <Route path="categories" element={<CategoriesListPage />} />
+                        <Route path="categories/create" element={<CategoryCreatePage />} />
+                        <Route path="categories/edit/:id" element={<CategoryEditPage />} />
+                        <Route path="categories/view/:id" element={<CategoryViewPage />} />
 
-                    {/* Підкатегорії */}
-                    <Route path="subcategories" element={<SubCategoryListPage />} />
-                    <Route path="subcategories/create" element={<SubCategoryCreatePage />} />
-                    <Route path="subcategories/edit/:id" element={<SubCategoryEditPage />} />
-                    <Route path="subcategories/view/:id" element={<SubCategoryViewPage />} />
+                        {/* Підкатегорії */}
+                        <Route path="subcategories" element={<SubCategoryListPage />} />
+                        <Route path="subcategories/create" element={<SubCategoryCreatePage />} />
+                        <Route path="subcategories/edit/:id" element={<SubCategoryEditPage />} />
+                        <Route path="subcategories/view/:id" element={<SubCategoryViewPage />} />
                 
-                    {/* PRODUCTS */}
-                    <Route path={"products"}>
-                    <Route index element={<ProductListPage />} />
-                    <Route path="create" element={<ProductCreatePage />} />
-                    <Route path="edit/:id" element={<ProductEditPage />} />
-                    <Route path="/admin/products/view/:id" element={<ProductViewPage />} />
-                    </Route>
+                        {/* PRODUCTS */}
+                        <Route path={"products"}>
+                        <Route index element={<ProductListPage />} />
+                        <Route path="create" element={<ProductCreatePage />} />
+                        <Route path="edit/:id" element={<ProductEditPage />} />
+                        <Route path="/admin/products/view/:id" element={<ProductViewPage />} />
+                        </Route>
 
-                    {/* USERS */}
-                    <Route path="users" element={<UsersList />} />
-                    <Route path="admins" element={<AdminsList />} />
+                        {/* USERS */}
+                        <Route path="users" element={<UsersList />} />
+                        <Route path="admins" element={<AdminsList />} />
+                    </Route>
                 </Route>
 
                 {/* Layout для клієнтів */}
