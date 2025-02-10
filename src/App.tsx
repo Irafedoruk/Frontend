@@ -30,6 +30,7 @@ import SearchResultsPage from "./components/client/products/SearchResultsPage.ts
 import CheckoutPage from "./components/client/orders/CheckoutPage.tsx";
 import ProductPage from "./components/client/layout/ProductPage";
 import PrivateRoute from "./components/admin/PrivateRoute.tsx";
+import AdminOrders from "./components/admin/orders/index.tsx";
 
 
 export default function App() {
@@ -64,6 +65,9 @@ export default function App() {
                         {/* USERS */}
                         <Route path="users" element={<UsersList />} />
                         <Route path="admins" element={<AdminsList />} />
+
+                        {/* ORDERS */}
+                        <Route path="orders" element={<AdminOrders />}/>
                     </Route>
                 </Route>
 

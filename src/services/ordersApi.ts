@@ -16,7 +16,17 @@ export const ordersApi = createApi({
     getOrders: builder.query<any, void>({
       query: () => '/orders',
     }),
+    getAdminOrders: builder.query<any, void>({
+      query: () => '/Order/orders',
+    }),    
+    updateOrderStatus: builder.mutation<void, { orderId: number; status: string }>({
+      query: ({ orderId, status }) => ({
+        url: `/orders/${orderId}/status`,
+        method: "PUT",
+        body: { status },
+      }),
+    }),    
   }),
 });
 
-export const { useCreateOrderMutation, useGetOrdersQuery } = ordersApi;
+export const { useCreateOrderMutation, useGetOrdersQuery, useUpdateOrderStatusMutation, useGetAdminOrdersQuery } = ordersApi;

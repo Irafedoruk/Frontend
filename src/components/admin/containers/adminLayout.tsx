@@ -71,7 +71,9 @@ const AdminLayout = () => {
                     </li>
                     <li><Link to="/admin/discounts" className="hover:text-gray-400">Знижки</Link></li>
                     <li><Link to="/admin/filters" className="hover:text-gray-400">Фільтри</Link></li>
-                    <li><Link to="/admin/orders" className="hover:text-gray-400">Замовлення</Link></li>
+                    <li>
+                        <Link to="/admin/orders" className="hover:text-gray-400">Замовлення</Link>
+                    </li>
                     <li>
                         <div
                             onClick={() => setOpenUserMenu(!openUserMenu)}
