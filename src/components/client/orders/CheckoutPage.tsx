@@ -6,24 +6,29 @@ import { clearCart } from '../../../interfaces/cart/cartSlice';
 import { useCreateOrderMutation } from '../../../services/ordersApi';
 import { ICreateOrder, IOrderItem } from '../../../interfaces/order';
 import { authFetch } from '../../../interfaces/users/authFetch';  // Assuming this is how you fetch user data
+import { ICity, IWarehouse } from '../../../interfaces/adress';
 
 const CheckoutPage: React.FC = () => {
   const cart = useSelector((state: RootState) => state.cart.items);
   const [userData, setUserData] = useState({
     address: '',
     phone: '',
+    city: '',
+    warehouse: '',
   });
   const [user, setUser] = useState<any | null>(null); // To hold user data
   const [createOrder] = useCreateOrderMutation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [cities, setCities] = useState<ICity[]>([]);
+  const [warehouses, setWarehouses] = useState<IWarehouse[]>([]);
 
   // Define the onLogout function
   const onLogout = () => {
     localStorage.clear();
     navigate('/login');
-  };
-  
+  };  
+
   useEffect(() => {
     if (cart.length === 0) {
       navigate('/cart');
@@ -75,7 +80,7 @@ const CheckoutPage: React.FC = () => {
       return;
     }
   
-    if (!userData.address || !userData.phone) {
+    if (!userData.city || !userData.warehouse || !userData.phone) {
       alert('Заповніть всі поля!');
       return;
     }
@@ -91,7 +96,7 @@ const CheckoutPage: React.FC = () => {
   
     const orderData: ICreateOrder = {
       userId: userId,  
-      address: userData.address,
+      address: `${userData.city}, Warehouse: ${userData.warehouse}`,
       items: orderItems,
       totalAmount,
       discountId: null,
@@ -123,6 +128,50 @@ const CheckoutPage: React.FC = () => {
     }
   };
   
+  const fetchCities = async () => {
+    try {
+      const response = await fetch("https://api.novaposhta.ua/v2.0/json/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          apiKey: import.meta.env.VITE_NP_API_KEY,
+          modelName: "Address",
+          calledMethod: "getCities",
+        }),
+      });
+  
+      const data = await response.json();
+      setCities(data.data as ICity[]);
+    } catch (error) {
+      console.error('Error fetching cities:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCities();
+  }, []);
+  
+  const fetchWarehouses = async (cityRef: string) => {
+    try {
+      const response = await fetch("https://api.novaposhta.ua/v2.0/json/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          apiKey: import.meta.env.VITE_NP_API_KEY,
+          modelName: "Address",
+          calledMethod: "getWarehouses",
+          methodProperties: { CityRef: cityRef },
+        }),
+      });
+  
+      const data = await response.json();
+      setWarehouses(data.data as IWarehouse[]);
+    } catch (error) {
+      console.error('Error fetching warehouses:', error);
+    }
+  };
+  
+  
   return (
     <div className="container mx-auto py-6">
       <h1 className="text-2xl font-bold mb-4">Checkout</h1>
@@ -136,7 +185,7 @@ const CheckoutPage: React.FC = () => {
           </div>
         )}
 
-        <div>
+        {/* <div>
           <label className="block text-sm font-medium">Address</label>
           <input
             type="text"
@@ -146,6 +195,46 @@ const CheckoutPage: React.FC = () => {
             className="w-full p-2 border border-gray-300 rounded-md"
             required
           />
+        </div> */}
+
+        <div>
+          <label className="block text-sm font-medium">City</label>
+          <select
+            name="city"
+            value={userData.city}
+            onChange={(e) => {
+              setUserData({ ...userData, city: e.target.value });
+              fetchWarehouses(e.target.value);
+            }}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            required
+          >
+            <option value="">Select a city</option>
+            {cities.map(city => (
+              <option key={city.Ref} value={city.Ref}>
+                {city.Description}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium">Warehouse</label>
+          <select
+            name="warehouse"
+            value={userData.warehouse}
+            onChange={(e) => setUserData({ ...userData, warehouse: e.target.value })}
+            className="w-full p-2 border border-gray-300 rounded-md"
+            required
+            disabled={!userData.city}
+          >
+            <option value="">Select a warehouse</option>
+            {warehouses.map(warehouse => (
+              <option key={warehouse.SiteKey} value={warehouse.SiteKey}>
+                {warehouse.Description}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>
