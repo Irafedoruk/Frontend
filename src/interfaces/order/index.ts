@@ -22,3 +22,10 @@ export interface IOrderItem {
     totalPrice: number; // Загальна сума замовлення
     address: string;  // Адреса
 }
+
+export enum OrderStatus {
+  Pending = 'Pending',       // Очікується обробка
+  Processed = 'Processed',   // Оброблено
+  Delivered = 'Delivered',   // Доставлено
+  Cancelled = 'Cancelled',   // Скасовано
+}
