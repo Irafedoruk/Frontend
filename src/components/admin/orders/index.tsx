@@ -1,36 +1,44 @@
 import React, { useState } from "react";
 import { useGetAdminOrdersQuery, useUpdateOrderStatusMutation } from "../../../services/ordersApi";
-import { OrderStatus } from "../../../interfaces/order";
+import { IOrder, OrderStatus } from "../../../interfaces/order";
 
 const AdminOrders = () => {
-  const { data: orders = [], isLoading } = useGetAdminOrdersQuery();
+  const { data: orders = [], isLoading, refetch } = useGetAdminOrdersQuery();
   const [updateOrderStatus] = useUpdateOrderStatusMutation();
   const [statusMap, setStatusMap] = useState<Record<number, OrderStatus>>({});
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
 
-  
-  const handleSelectChange = (orderId: number, status: OrderStatus) => {
+  const handleSelectChange = (orderId: number, status: string) => {
+    const statusNumber = Number(status) as OrderStatus;
     setStatusMap((prev) => ({
       ...prev,
-      [orderId]: status, // Store the string value of the status (OrderStatus)
+      [orderId]: statusNumber,
     }));
   };
 
-  const handleStatusChange = async (orderId: number, status: OrderStatus) => {
+  const handleStatusChange = async (orderId: number) => {
     try {
-      // Передати числове значення замість рядка
-      const updatedOrder = { orderId, status: OrderStatus.Cancelled };  // Замінюємо на числовий еквівалент статусу
-      
+      const status = statusMap[orderId] ?? orders.find((order : IOrder) => order.id === orderId)?.status;
+      if (typeof status !== "number") {
+        console.error("Некоректний статус замовлення");
+        return;
+      }
+
+      const updatedOrder = { orderId, status };
+
       console.log("Запит на оновлення статусу замовлення:", updatedOrder);
-      
-      // Викликаємо мутацію
+
       await updateOrderStatus(updatedOrder);
-      alert("Статус замовлення успішно оновлено");
+      setStatusMap((prev) => ({
+        ...prev,
+        [orderId]: status, // оновлення статусу після успішного оновлення
+      }));
+      //alert("Статус замовлення успішно оновлено");
+      refetch();
     } catch (error) {
       console.error("Помилка оновлення статусу замовлення", error);
     }
   };
-  
 
   const toggleOrderDetails = (orderId: number) => {
     setExpandedOrderId(expandedOrderId === orderId ? null : orderId);
@@ -63,19 +71,22 @@ const AdminOrders = () => {
                   <td className="p-2">{order.totalPrice} грн</td>
                   <td className="p-2">
                     <select
-                      value={statusMap[order.id] || order.status} // Ensure correct string value here
-                      onChange={(e) => handleSelectChange(order.id, e.target.value as OrderStatus)} 
+                      value={statusMap[order.id] ?? OrderStatus[order.status as keyof typeof OrderStatus]}
+                      onChange={(e) => handleSelectChange(order.id, e.target.value)}
                     >
-                      <option value={OrderStatus.Pending}>{OrderStatus.Pending}</option>
-                      <option value={OrderStatus.Processed}>{OrderStatus.Processed}</option>
-                      <option value={OrderStatus.Delivered}>{OrderStatus.Delivered}</option>
-                      <option value={OrderStatus.Cancelled}>{OrderStatus.Cancelled}</option>
+                      {Object.keys(OrderStatus)
+                        .filter((key) => isNaN(Number(key))) // Фільтруємо текстові значення Enum
+                        .map((key) => (
+                          <option key={OrderStatus[key as keyof typeof OrderStatus]} value={OrderStatus[key as keyof typeof OrderStatus]}>
+                            {key}
+                          </option>
+                        ))}
                     </select>
                   </td>
                   <td className="p-2">
                     <button
                       className="bg-blue-500 text-white px-3 py-1 rounded"
-                      onClick={() => handleStatusChange(order.id, statusMap[order.id] || order.status)} // Pass the string status
+                      onClick={() => handleStatusChange(order.id)}
                     >
                       Оновити статус
                     </button>

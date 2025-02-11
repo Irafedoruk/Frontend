@@ -24,8 +24,8 @@ export interface IOrderItem {
 }
 
 export enum OrderStatus {
-  Pending = 'Pending',       // Очікується обробка
-  Processed = 'Processed',   // Оброблено
-  Delivered = 'Delivered',   // Доставлено
-  Cancelled = 'Cancelled',   // Скасовано
+  Pending = 0,
+  Completed = 1,
+  Cancelled = 2,
+  Shipped = 3,
 }
