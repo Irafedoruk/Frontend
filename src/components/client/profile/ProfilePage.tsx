@@ -4,7 +4,7 @@ import Avatar from "react-avatar";
 import { API_URL } from "../../../env/index.ts";
 import { User } from "../../../interfaces/users/index.ts";
 import { authFetch } from "../../../interfaces/users/authFetch.ts";
-import { IOrder } from "../../../interfaces/order/index.ts";
+import { IOrder, OrderStatus } from "../../../interfaces/order/index.ts";
 
 const ProfilePage = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -17,6 +17,21 @@ const ProfilePage = () => {
   const onLogout = () => {
     localStorage.clear();
     navigate('/login');
+  };
+  const getOrderStatus = (status: string) => {
+    console.log("Received status:", status); // додайте лог, щоб побачити отриманий статус
+    switch (status.toLowerCase()) { // використовуйте toLowerCase для порівняння
+      case "pending":
+        return 'Очікується';
+      case "completed":
+        return 'Завершено';
+      case "cancelled":
+        return 'Скасовано';
+      case "shipped":
+        return 'Відправлено';
+      default:
+        return 'Невідомий статус';
+    }
   };
   
   // First useEffect: fetch user data
@@ -78,6 +93,7 @@ const ProfilePage = () => {
     return <p>Завантаження інформації про профіль...</p>;
   }
 
+  
   // Вміст для кожної вкладки
   const renderTabContent = () => {
     switch (activeTab) {
@@ -122,37 +138,40 @@ const ProfilePage = () => {
       case "orders":
         return (
           <div>
-      <h2 className="text-2xl font-bold mb-4">Мої замовлення</h2>
-      {orders.length > 0 ? (
-        <div className="grid gap-4">
-          {orders.map((order) => (
-            <div key={order.id} className="border p-4 bg-gray-50 rounded-md shadow-md">
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="text-xl font-semibold">
-                  Замовлення #{order.id}
-                </h3>
-                <span className="text-sm text-gray-600">
-                  {new Date(order.orderDate).toLocaleDateString()}
-                </span>
-              </div>
-              <div className="text-lg font-bold text-blue-600">
-                Сума: {order.totalPrice.toFixed(2)} грн
-              </div>
-              <h4 className="font-semibold mt-2">Товари:</h4>
-              <ul className="list-disc pl-5">
-                {order.items.map((item) => (
-                  <li key={item.productId} className="text-gray-800">
-                    {item.quantity} x <strong>{item.productName}</strong> — {item.price.toFixed(2)} грн
-                  </li>
+            <h2 className="text-2xl font-bold mb-4">Мої замовлення</h2>
+            {orders.length > 0 ? (
+              <div className="grid gap-4">
+                {orders.map((order) => (
+                  <div key={order.id} className="border p-4 bg-gray-50 rounded-md shadow-md">
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="text-xl font-semibold">
+                        Замовлення #{order.id}
+                      </h3>
+                      <span className="text-sm text-gray-600">
+                        {new Date(order.orderDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <div className="text-lg font-bold text-blue-600">
+                      Сума: {order.totalPrice.toFixed(2)} грн
+                    </div>
+                    <h4 className="font-semibold mt-2">Товари:</h4>
+                    <ul className="list-disc pl-5">
+                      {order.items.map((item) => (
+                        <li key={item.productId} className="text-gray-800">
+                          {item.quantity} x <strong>{item.productName}</strong> — {item.price.toFixed(2)} грн
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-2 text-sm text-gray-700">
+                      <strong>Статус:</strong> {getOrderStatus(order.status)}
+                    </div>
+                  </div>
                 ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p>У вас немає замовлень.</p>
-      )}
-    </div>
+              </div>
+            ) : (
+              <p>У вас немає замовлень.</p>
+            )}
+          </div>
         );
       case "wishlist":
         return <h2 className="text-2xl font-bold">Мій список бажань</h2>;
