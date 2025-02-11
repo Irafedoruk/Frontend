@@ -1,10 +1,11 @@
 import Slider from "react-slick";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useGetSubCategoriesQuery } from "../../../services/subcategoryApi";
 import { API_URL } from "../../../env";
 
 const SubCategoryCarousel = () => {
     const { data: subCategories, isLoading } = useGetSubCategoriesQuery();
+    const navigate = useNavigate();
 
     const settings = {
         dots: true,
@@ -15,6 +16,7 @@ const SubCategoryCarousel = () => {
         autoplay: true,
         autoplaySpeed: 3000,
     };
+    
 
     if (isLoading) return <p>Завантаження...</p>;
 
@@ -22,7 +24,10 @@ const SubCategoryCarousel = () => {
         <div>
             <Slider {...settings}>
                 {subCategories?.map((subCategory) => (
-                    <div key={subCategory.id} className="p-4">
+                    <div key={subCategory.id} 
+                    className="p-4 cursor-pointer"
+                    onClick={() => navigate(`/subcategory/${subCategory.id}/products`)}
+                    >
                         <Link to={`/subcategory/${subCategory.id}`}>
                             <img
                                 src={`${API_URL}/images/1200_${subCategory.imageSubCategory}`}

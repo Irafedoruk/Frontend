@@ -87,6 +87,8 @@ export default function App() {
                     <Route path="contact" element={<ContactsPage />} />
                     <Route path="pricing-policy" element={<PricingPolicyPage />} />
                     <Route path="/product/:id" element={<ProductPage />}/>
+                    <Route path="/subcategory/:id/products" element={<CategoryPage />} />
+                    {/* <Route path="products" element={<ProductsPage />} /> */}
 
                 </Route>
                 {/* Сторінка 404 */}
