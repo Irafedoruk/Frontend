@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const navigate = useNavigate();
   
     const handleRegister = async () => {
       if (password !== confirmPassword) {
@@ -20,6 +22,7 @@ const RegisterPage = () => {
   
         if (response.ok) {
           alert("Реєстрація успішна! Тепер увійдіть.");
+          navigate("/login");
         } else {
           const error = await response.text();
           alert(`Помилка реєстрації: ${error}`);
