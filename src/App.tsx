@@ -31,6 +31,7 @@ import CheckoutPage from "./components/client/orders/CheckoutPage.tsx";
 import ProductPage from "./components/client/layout/ProductPage";
 import PrivateRoute from "./components/admin/PrivateRoute.tsx";
 import AdminOrders from "./components/admin/orders/index.tsx";
+// import CategoryLayout from "./components/client/layout/CategoryLayout.tsx";
 
 
 export default function App() {
@@ -88,9 +89,14 @@ export default function App() {
                     <Route path="pricing-policy" element={<PricingPolicyPage />} />
                     <Route path="/product/:id" element={<ProductPage />}/>
                     <Route path="/subcategory/:id/products" element={<CategoryPage />} />
-                    {/* <Route path="products" element={<ProductsPage />} /> */}
 
                 </Route>
+                 {/* Layout для категорій (з Sidebar) */}
+        {/* <Route element={<CategoryLayout />}>
+          <Route path="/category/:id" element={<CategoryPage />} /> 
+          <Route path="/product/:id" element={<ProductPage />}/> */}
+           {/* <Route path="/subcategory/:id/products" element={<ProductsPage />} /> */}
+        {/* </Route> */}
                 {/* Сторінка 404 */}
                 <Route path="*" element={<h1>Сторінка не знайдена</h1>} />
             </Routes>
