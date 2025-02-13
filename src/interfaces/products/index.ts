@@ -70,3 +70,8 @@ export interface IUploadedFile {
     type: string;
     uid: string;
 }
+
+export interface ProductsPageProps {
+    categoryId?: number;  //  Робимо `categoryId` необов'язковим
+    subCategoryId?: number;
+  }
