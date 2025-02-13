@@ -91,12 +91,6 @@ export default function App() {
                     <Route path="/subcategory/:id/products" element={<CategoryPage />} />
 
                 </Route>
-                 {/* Layout для категорій (з Sidebar) */}
-        {/* <Route element={<CategoryLayout />}>
-          <Route path="/category/:id" element={<CategoryPage />} /> 
-          <Route path="/product/:id" element={<ProductPage />}/> */}
-           {/* <Route path="/subcategory/:id/products" element={<ProductsPage />} /> */}
-        {/* </Route> */}
                 {/* Сторінка 404 */}
                 <Route path="*" element={<h1>Сторінка не знайдена</h1>} />
             </Routes>

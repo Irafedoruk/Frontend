@@ -72,6 +72,8 @@ export interface IUploadedFile {
 }
 
 export interface ProductsPageProps {
-    categoryId?: number;  //  Робимо `categoryId` необов'язковим
+    categoryId?: number;
     subCategoryId?: number;
+    products?: IProductItem[]; // Додаємо цей рядок
   }
+  

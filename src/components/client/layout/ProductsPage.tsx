@@ -20,6 +20,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ subCategoryId }) => {
   // Отримуємо інформацію про підкатегорію (назва + категорія)
   const { data: subCategory, isLoading: isSubCategoryLoading } = useGetSubCategoryQuery(subId);
 
+  
   const [hoveredProductId, setHoveredProductId] = useState<number | null>(null);
   const [productQuantities, setProductQuantities] = useState<Record<number, number>>({});
   const dispatch = useDispatch();
@@ -71,25 +72,31 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ subCategoryId }) => {
   }
 
   return (
-    <div className="container mx-auto py-6 flex">
-      {/* Відображаємо CategorySidebar тільки якщо ми не на головній сторінці */}
-      {location.pathname.includes("/subcategory/") && <CategorySidebar onCategoryChange={() => {}} />}
+    <div className="container mx-auto py-6 flex flex-col">
+  {/* Хлібні крихти над Sidebar */}
+  <nav className="text-gray-600 mb-4 flex items-center">
+      <Link to="/" className="hover:text-black text-lg">
+        <span className="mr-2">🏠</span>
+      </Link>
+      {subCategory?.categoryName && (
+        <>
+          <span className="mx-2">/</span>
+          <Link to={`/category/${subCategory.categoryId}`} className="hover:underline text-black">
+            {subCategory.categoryName}
+          </Link>
+        </>
+      )}
+      <span className="mx-2">/</span>
+      <span>{subCategory?.name || "Продукти"}</span>
+    </nav>
 
-      <div className="ml-6 flex-1">
-        {/* Хлібні крихти (категорія / підкатегорія) */}
-        <nav className="text-gray-600 mb-4">
-          {subCategory?.categoryName && (
-            <>
-              <Link to={`/category/${subCategory.categoryId}`} className="hover:underline text-black">
-                {subCategory.categoryName}
-              </Link>{" "}
-              /{" "}
-            </>
-          )}
-          <span>{subCategory?.name || "Продукти"}</span>
-        </nav>
-
-        <h1 className="text-2xl font-bold mb-4">{subCategory?.name || "Продукти"}</h1>
+   {/* Основний контент: Sidebar + Продукти */}
+  <div className="flex">
+    {/* Відображаємо Sidebar тільки якщо ми не на головній сторінці */}
+    {location.pathname.includes("/subcategory/") && <CategorySidebar onCategoryChange={() => {}} />}
+    
+    <div className="ml-6 flex-1">
+      <h1 className="text-2xl font-bold mb-4">{subCategory?.name || "Продукти"}</h1>
         
         <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {products.map((product: IProductItem) => (
@@ -128,6 +135,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ subCategoryId }) => {
           ))}
         </ul>
       </div>
+    </div>
     </div>
   );
 };
