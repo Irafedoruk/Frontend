@@ -4,7 +4,7 @@ import { useGetSubCategoryQuery } from "../../../services/subcategoryApi";
 import CategorySidebar from "./CategorySidebar";
 import { API_URL } from "../../../env";
 import { IProductItem, ProductsPageProps } from "../../../interfaces/products";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { addToCart, CartItem } from "../../../interfaces/cart/cartSlice";
 import axios from "axios";
@@ -20,7 +20,8 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ subCategoryId }) => {
   // Отримуємо інформацію про підкатегорію (назва + категорія)
   const { data: subCategory, isLoading: isSubCategoryLoading } = useGetSubCategoryQuery(subId);
 
-  
+  const [wishList, setWishList] = useState<number[]>([]);
+
   const [hoveredProductId, setHoveredProductId] = useState<number | null>(null);
   const [productQuantities, setProductQuantities] = useState<Record<number, number>>({});
   const dispatch = useDispatch();
@@ -63,6 +64,76 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ subCategoryId }) => {
     }
   };
 
+  useEffect(() => {
+    const fetchWishList = async () => {
+      const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("accessToken");
+  
+      if (userId && token) {
+        try {
+          const response = await axios.get(`${API_URL}/api/WishList/${userId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          setWishList(response.data.map((item: any) => item.productId));
+        } catch (error) {
+          console.error("Помилка отримання вішліста", error);
+        }
+      }
+    };
+  
+    fetchWishList();
+  }, []);
+  
+  const toggleWishList = async (productId: number) => {
+    const token = localStorage.getItem("accessToken");
+    const userId = localStorage.getItem("userId");
+  
+    // Отримуємо товар за productId
+    const product = products?.find(p => p.id === productId);
+  
+    if (!product) {
+      console.error("Продукт не знайдено");
+      return;
+    }
+  
+    // Якщо товар уже в вішлісті, видаляємо його
+    if (wishList.includes(productId)) {
+      try {
+        await axios.delete(`${API_URL}/api/WishList/${productId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setWishList(prev => prev.filter(id => id !== productId));
+      } catch (error) {
+        console.error("Помилка видалення з вішліста", error);
+      }
+    } else {
+      // Якщо товар не в вішлісті, додаємо його
+      if (!token) {
+        alert("Авторизуйтесь, щоб додати в обране!");
+        return;
+      }
+  
+      try {
+        // Створюємо об'єкт відповідно до API
+        const wishListItem = {
+          productId: product.id,
+          productName: product.name,
+          productPrice: product.price
+        };
+  
+        await axios.post(
+          `${API_URL}/api/WishList`,
+          wishListItem,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setWishList(prev => [...prev, productId]);
+      } catch (error) {
+        console.error("Помилка додавання до вішліста", error);
+      }
+    }
+  };
+  
+  
   if (isLoading || isSubCategoryLoading) {
     return <div>Завантаження...</div>;
   }
@@ -114,6 +185,15 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ subCategoryId }) => {
                 />
                 <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
               </Link>
+              {/* Сердечко для вішліста */}
+              <button 
+                onClick={() => toggleWishList(product.id)}
+                className={`absolute top-2 right-2 text-2xl 
+                  ${wishList.includes(product.id) ? 'text-red-500' : 'text-gray-400'}
+                  hover:text-red-600`}
+              >
+                ♥
+              </button>
               {hoveredProductId === product.id && (
                 <div className="absolute bottom-0 left-0 right-0 bg-gray-800 bg-opacity-80 text-white p-4 transition-all duration-300 ease-in-out">
                   <div className="flex justify-between items-center">
@@ -141,6 +221,8 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ subCategoryId }) => {
 };
 
 export default ProductsPage;
+
+
 // import { Link, useParams, useLocation } from "react-router-dom";
 // import { useGetProductsByCategoryIdQuery, useGetProductsBySubCategoryIdQuery } from "../../../services/productApi";
 // import CategorySidebar from "./CategorySidebar";

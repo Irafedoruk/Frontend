@@ -7,6 +7,7 @@ import cartReducer from '../interfaces/cart/cartSlice.ts';
 import { authApi } from '../services/authApi.ts';
 import { cartApi } from '../services/cartApi.ts';
 import { ordersApi } from '../services/ordersApi.ts';
+import wishlistReducer from "./wishlistSlice";
 
 const store = configureStore({
     reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
         [cartApi.reducerPath]: cartApi.reducer,
         [ordersApi.reducerPath]: ordersApi.reducer,
         cart: cartReducer, // Додаємо редуктор для кошика
+        wishlist: wishlistReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(

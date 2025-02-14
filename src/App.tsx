@@ -31,6 +31,7 @@ import CheckoutPage from "./components/client/orders/CheckoutPage.tsx";
 import ProductPage from "./components/client/layout/ProductPage";
 import PrivateRoute from "./components/admin/PrivateRoute.tsx";
 import AdminOrders from "./components/admin/orders/index.tsx";
+import WishListPage from "./components/client/wishlist/index.tsx";
 // import CategoryLayout from "./components/client/layout/CategoryLayout.tsx";
 
 
@@ -89,7 +90,7 @@ export default function App() {
                     <Route path="pricing-policy" element={<PricingPolicyPage />} />
                     <Route path="/product/:id" element={<ProductPage />}/>
                     <Route path="/subcategory/:id/products" element={<CategoryPage />} />
-
+                    <Route path="/wishlist" element={<WishListPage />} />
                 </Route>
                 {/* Сторінка 404 */}
                 <Route path="*" element={<h1>Сторінка не знайдена</h1>} />
