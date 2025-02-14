@@ -93,9 +93,9 @@ const ClientLayout = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-grayLight text-darkPurple">
-      <header className="bg-lavender text-grayDark shadow-md">
-        <div className="flex justify-between items-center p-2 bg-grayLight text-sm">
+    <div className="bg-background text-accent">
+      <header className="bg-primary text-accent shadow-md">
+        <div className="flex justify-between items-center p-2 text-sm">
           <div className="flex items-center space-x-4">
             <span>📚 <Link to="/books" className="hover:underline">Книги до зимових свят</Link></span>
             <span>🛒 Інтернет гуртівня книг №1 в Україні</span>
@@ -106,11 +106,11 @@ const ClientLayout = () => {
           </div>
         </div>
   
-        <div className="flex items-center justify-between p-2 bg-lavender shadow-md">
+        <div className="flex items-center justify-between p-2 shadow-md">
           <Link to="/" className="flex items-center space-x-2">
             <img src={Logo} alt="Logo" className="h-16 w-auto ml-2" />
-            <span className="text-4xl font-extrabold text-lightLavender">
-              Ballons<span className="text-lightLavender">Shop</span>
+            <span className="text-4xl font-sans text-accent">
+              Ballons<span className="text-accent">Shop</span>
             </span>
           </Link>
   
