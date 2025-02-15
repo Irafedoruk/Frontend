@@ -150,7 +150,6 @@ return (
                     <p>У цій категорії немає підкатегорій.</p>
                 )}
 
-                {/* Відображення продуктів цієї категорії */}
                 <h1 className="text-2xl font-bold mt-8 mb-4">Продукти</h1>
                 <ProductsPage categoryId={categoryId} products={filteredProducts} />
             </div>

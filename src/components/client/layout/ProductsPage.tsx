@@ -1,5 +1,5 @@
 import { Link, useParams, useLocation } from "react-router-dom"; 
-import { useGetProductsBySubCategoryIdQuery } from "../../../services/productApi";
+import { useGetProductsByCategoryIdQuery, useGetProductsBySubCategoryIdQuery } from "../../../services/productApi";
 import { useGetSubCategoryQuery } from "../../../services/subcategoryApi";
 import CategorySidebar from "./CategorySidebar";
 import { API_URL } from "../../../env";
@@ -8,18 +8,19 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { addToCart, CartItem } from "../../../interfaces/cart/cartSlice";
 import axios from "axios";
+import { useGetCategoryQuery, useGetSubCategoriesByCategoryIdQuery } from "../../../services/categoryApi";
 
-const ProductsPage: React.FC<ProductsPageProps> = ({ subCategoryId }) => {
+const ProductsPage: React.FC<ProductsPageProps> = ({ categoryId, subCategoryId }) => {
   const { id } = useParams(); 
   const subId = subCategoryId || Number(id);
   const location = useLocation(); 
 
   // Отримуємо продукти для підкатегорії
-  const { data: products, isLoading } = useGetProductsBySubCategoryIdQuery(subId);
-
-  // Отримуємо інформацію про підкатегорію (назва + категорія)
-  const { data: subCategory, isLoading: isSubCategoryLoading } = useGetSubCategoryQuery(subId);
-
+  const { data: category } = useGetCategoryQuery(categoryId);
+  const { data: subCategory } = useGetSubCategoryQuery(subId);
+   const { data: products, isLoading } = categoryId
+    ? useGetProductsByCategoryIdQuery(categoryId) // Запит продуктів по категорії
+    : useGetProductsBySubCategoryIdQuery(subId);  // Запит продуктів по підкатегорії
   const [wishList, setWishList] = useState<number[]>([]);
 
   const [hoveredProductId, setHoveredProductId] = useState<number | null>(null);
@@ -134,9 +135,9 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ subCategoryId }) => {
   };
   
   
-  if (isLoading || isSubCategoryLoading) {
-    return <div>Завантаження...</div>;
-  }
+  // if (isLoading || isSubCategoryLoading) {
+  //   return <div>Завантаження...</div>;
+  // }
 
   if (!products || products.length === 0) {
     return <div>Продукти не знайдено.</div>;
@@ -149,16 +150,24 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ subCategoryId }) => {
       <Link to="/" className="hover:text-black text-lg">
         <span className="mr-2">🏠</span>
       </Link>
-      {subCategory?.categoryName && (
-        <>
-          <span className="mx-2">/</span>
-          <Link to={`/category/${subCategory.categoryId}`} className="hover:underline text-black">
-            {subCategory.categoryName}
-          </Link>
-        </>
-      )}
-      <span className="mx-2">/</span>
-      <span>{subCategory?.name || "Продукти"}</span>
+      {category?.name && (
+          <>
+            <span className="mx-2">/</span>
+            <Link to={`/category/${category.id}`} className="hover:underline text-black">
+              {category.name}
+            </Link>
+          </>
+        )}
+
+        {/* Підкатегорія (якщо є) */}
+        {subCategory?.name && (
+          <>
+            <span className="mx-2">/</span>
+            <Link to={`/subcategory/${subCategory.id}/products`} className="hover:underline text-black">
+              {subCategory.name}
+            </Link>
+          </>
+        )}
     </nav>
 
    {/* Основний контент: Sidebar + Продукти */}
