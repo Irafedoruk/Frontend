@@ -28,7 +28,7 @@ export default {
         // yellowAccent: '#FDE047',    // Жовтий для акцентів
 
         primary: '#EDCBC2',        // header
-        background: '#FFF3EF',   // для фону
+        background: '#FFFFFF',   // для фону #FFF3EF
         accent: '#844E38',      // Темніший для заголовків
         secondary: '#CB8E75',            // для іншого тексту
         //lightPink: '#FBCFE8',       // Світло-рожевий для ніжності

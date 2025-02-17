@@ -10,6 +10,8 @@ import { IProductItem, ProductsPageProps } from "../../../interfaces/products";
 import { useEffect, useState } from "react";
 import { useGetCategoryQuery, useGetSubCategoriesByCategoryIdQuery } from "../../../services/categoryApi";
 import axios from "axios";
+import bookmark from '../../../assets/images/bookmark.png';
+import bookmarkWhite from '../../../assets/images/bookmark-white.png';
 
 const ProductsPage: React.FC<ProductsPageProps> = ({ categoryId, subCategoryId }) => {
   const { id } = useParams();
@@ -133,7 +135,8 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categoryId, subCategoryId }
         const wishListItem = {
           productId: product.id,
           productName: product.name,
-          productPrice: product.price
+          productPrice: product.price,
+          productImage: product.images[0] // Додаємо перше зображення товару
         };
 
         await axios.post(
@@ -338,14 +341,15 @@ return (
 
                 {/* Сердечко для вішліста */}
                 <button
-                  onClick={() => toggleWishList(product.id)}
-                  className={`absolute top-2 right-2 text-2xl ${
-                    wishList.includes(product.id) ? "text-red-500" : "text-gray-400"
-                  } hover:text-red-600`}
-                >
-                  ♥
-                </button>
-
+  onClick={() => toggleWishList(product.id)}
+  className="absolute top-2 right-2 w-6 h-6"
+>
+  <img
+    src={wishList.includes(product.id) ? bookmark : bookmarkWhite }
+    alt="bookmark"
+    className="w-full h-full object-contain"
+  />
+</button>
                 {hoveredProductId === product.id && (
                   <div className="absolute bottom-0 left-0 right-0 bg-gray-800 bg-opacity-80 text-white p-4 transition-all duration-300 ease-in-out">
                     <div className="flex justify-between items-center">

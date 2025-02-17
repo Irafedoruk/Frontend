@@ -8,11 +8,11 @@ import backgroundImage from '../../../assets/images/image-from-rawpixel-id-15134
         // secondary: '#CB8E75',            // для іншого тексту
 const Footer = () => {
     return (
-        <footer className="text-accent py-8 relative bg-cover bg-center w-full bottom-0"
-            style={{ backgroundImage: `url(${backgroundImage})` }}>
+         <footer className="w-full h-[175px] shadow-md items-center justify-between px-6 border-t border-primary">
+            {/* style={{ backgroundImage: `url(${backgroundImage})` }}    */}
             {/* Thin Top Line with Elevated Inverted Shadow */}
             <div className="bg-background shadow-md"></div>
-            <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 mt-2 ">
                 {/* Лого та соціальні мережі */}
                 <div className="flex flex-col items-center md:items-start">
                     <h2 className="text-accent font-sans mb-4">Ballons<span className="text-accent">Shop</span></h2>
@@ -85,7 +85,7 @@ const Footer = () => {
             </div>
 
             {/* Нижній рядок футера */}
-            <div className="mt-8 pt-4 text-center text-secondary bottom-0">
+            <div className="mt-2 pt-4 text-center text-secondary bottom-0">
                 <p>© {new Date().getFullYear()} BallonsShop. Всі права захищені.</p>
             </div>
         </footer>
