@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useGetCategoriesQuery, useGetSubCategoriesByCategoryIdQuery } from "../../../services/categoryApi";
 import Footer from "./Footer";
-import { FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
+import { FaSearch, FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { clearCart } from "../../../interfaces/cart/cartSlice";
@@ -94,8 +94,8 @@ const ClientLayout = () => {
 
   return (
     <div className="bg-background text-accent">
-      <header className="bg-primary text-accent shadow-md">
-        <div className="flex justify-between items-center p-2 text-sm">
+      <header className=" text-accent ">
+        {/* <div className="flex justify-between items-center p-2 text-sm">
           <div className="flex items-center space-x-4">
             <span>📚 <Link to="/books" className="hover:underline">Книги до зимових свят</Link></span>
             <span>🛒 Інтернет гуртівня книг №1 в Україні</span>
@@ -104,21 +104,21 @@ const ClientLayout = () => {
           <div>
             <a href="tel:+380683010220" className="hover:underline">📞 +38 068 301-02-20</a>
           </div>
-        </div>
+        </div> */}
   
-        <div className="flex items-center justify-between p-2 shadow-md">
+        <div className="flex items-center justify-between p-2 ">
           <Link to="/" className="flex items-center space-x-2">
             <img src={Logo} alt="Logo" className="h-16 w-auto ml-2" />
             <span className="text-4xl font-sans text-accent">
-              Ballons<span className="text-accent">Shop</span>
+              BallonsShop
             </span>
           </Link>
   
           <button
             onClick={toggleMenu}
-            className="bg-mint text-grayDark text-xl px-6 py-3 rounded-lg hover:bg-darkPurple transition duration-300"
+            className="border border-accent text-accent text-xl px-6 py-3 rounded-lg hover:text-primary transition duration-300"
           >
-            📚 Каталог
+            Каталог
           </button>
           {isMenuOpen && !categoriesLoading && categories && (
   <div
@@ -223,19 +223,19 @@ const ClientLayout = () => {
     )}
   </div>
 )}  */}
-          <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-full px-4 py-2 shadow-md">
+          <form onSubmit={handleSearchSubmit} className="flex items-center bg-white rounded-lg px-4 py-2 border border-accent">
             <input
               type="text"
               placeholder="Я шукаю..."
-              className="outline-none px-3 py-1 text-lg text-grayDark w-64"
+              className="outline-none px-3 py-1 text-lg text-accent w-64"
               value={search}
               onChange={handleSearch}
             />
             <button
               type="submit"
-              className="bg-mint text-white text-lg px-5 py-2 rounded-full hover:bg-darkPurple transition duration-300"
+              className="text-accent text-lg px-5 py-2 rounded-lg hover:text-primary transition duration-300"
             >
-              🔍
+              <FaSearch />
             </button>
             {showSuggestions && searchResults && searchResults.length > 0 && (
   <ul className="absolute top-full left-0 w-full bg-white shadow-md rounded-md mt-1 max-h-40 overflow-y-auto">
@@ -278,8 +278,8 @@ const ClientLayout = () => {
           </div>
         </div>
       </header>
-  
-      <main className="container mx-auto py-6 px-6">
+      {/* className=container mx-auto py-6 px-6 */}
+      <main className="w-full">  
         <Outlet />
       </main>
   
