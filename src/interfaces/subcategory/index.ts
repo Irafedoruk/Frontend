@@ -1,5 +1,6 @@
 export interface ISubCategoryItem {
     id: number;
+    slug: string;
     name: string;
     categoryId: number;
     categoryName: string;
@@ -8,10 +9,12 @@ export interface ISubCategoryItem {
 
 export interface ISubCategoryName {
     id: number;
+    slug: string;
     name: string;
 }
 export interface ISubCategoryEdit {
     id: number;
+    slug?: string;
     name: string;
     categoryId: number | "";
     currentImagePath: string;
@@ -30,6 +33,7 @@ export interface IUploadedFile {
     uid: string;
 }
 export interface ISubCategoryCreate {
+    slug?: string;
     name: string;
     categoryId: number | "";
     imageSubCategory: File | null;

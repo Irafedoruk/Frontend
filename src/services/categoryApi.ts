@@ -10,11 +10,11 @@ export const categoryApi = createApi({
             query: () => 'category',
             // Refetch when the page arg changes
             forceRefetch({ currentArg, previousArg }) {
-                return currentArg !== previousArg
+                return currentArg !== previousArg;
             },
         }),
-        getCategory: builder.query({
-            query: (id) => `/category/${id}`, // Запит на отримання конкретної категорії
+        getCategoryBySlug: builder.query<ICategoryItem, string>({ // ✅ Запит по slug
+            query: (slug) => `/category/slug/${slug}`,
         }),
         deleteCategory: builder.mutation<void, number>({
             query: (id) => ({
@@ -22,17 +22,15 @@ export const categoryApi = createApi({
                 method: 'DELETE',
             }),
         }),
-        getSubCategoriesByCategoryId: builder.query({
-            query: (categoryId) => `/subcategory?categoryId=${categoryId}`, // Запит на отримання підкатегорій для категорії
+        getSubCategoriesByCategorySlug: builder.query({ // ✅ Підкатегорії через slug
+            query: (categorySlug) => `/subcategory?categorySlug=${categorySlug}`,
         }),
-        // addPost: builder.mutation({
-        //     query: (newPost) => ({
-        //         url: 'categories',
-        //         method: 'POST',
-        //         body: newPost,
-        //     }),
-        // }),
     }),
 });
 
-export const { useGetCategoriesQuery, useGetCategoryQuery, useGetSubCategoriesByCategoryIdQuery, useDeleteCategoryMutation /*useAddPostMutation*/ } = categoryApi;
+export const {
+    useGetCategoriesQuery,
+    useGetCategoryBySlugQuery, // ✅ Оновлено на slug
+    useGetSubCategoriesByCategorySlugQuery, // ✅ Оновлено на slug
+    useDeleteCategoryMutation
+} = categoryApi;

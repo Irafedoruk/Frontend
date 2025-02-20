@@ -1,11 +1,13 @@
 export interface ICategoryItem {
     id: number;
+    slug: string;
     name: string;
     description: string;
     imageCategory: string;
 }
 
 export interface ICategoryCreate {
+    slug?: string; 
     name: string;
     description: string;
     imageCategory: File|null;
@@ -13,6 +15,7 @@ export interface ICategoryCreate {
 
 export interface ICategoryEdit {
     id: number;
+    slug?: string; 
     name: string;
     description: string;
     imageCategory: string;
@@ -20,6 +23,7 @@ export interface ICategoryEdit {
 
 export interface ICategoryName {
     id: number;
+    slug: string;
     name: string;
 }
 

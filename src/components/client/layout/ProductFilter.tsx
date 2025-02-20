@@ -1,21 +1,4 @@
-import { useEffect, useState } from "react";
-import { IProductItem } from "../../../interfaces/products";
-
-// interface ProductFilterProps {
-//   products: IProductItem[];
-//   selectedManufacturers: string[];
-//   setSelectedManufacturers: (manufacturers: string[]) => void;
-//   selectedQuantities: number[];
-//   setSelectedQuantities: (quantities: number[]) => void;
-// }
-interface ProductFilterProps {
-    products: IProductItem[];
-    selectedManufacturers: string[];
-    setSelectedManufacturers: React.Dispatch<React.SetStateAction<string[]>>; // <-- важливо!
-    selectedQuantities: number[];
-    setSelectedQuantities: React.Dispatch<React.SetStateAction<number[]>>; // <-- важливо!
-  }
-  
+import { IProductItem, ProductFilterProps } from "../../../interfaces/products";
 
 const ProductFilter: React.FC<ProductFilterProps> = ({
   products,

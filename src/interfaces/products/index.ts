@@ -1,5 +1,6 @@
 export interface IProductItem {
     id: number;
+    slug: string;
     code: string,
     name: string,
     price: number,
@@ -18,6 +19,7 @@ export interface IProductItem {
 }
 
 export interface IProductCreate {
+    slug?: string;
     code: string,
     name: string,
     price: number,
@@ -42,6 +44,7 @@ export interface IProductImageDesc {
 
 export interface IProductEdit {
     id: number,
+    slug?: string;
     code: string,
     name: string,
     price: number,
@@ -72,8 +75,15 @@ export interface IUploadedFile {
 }
 
 export interface ProductsPageProps {
-    categoryId?: number;
-    subCategoryId?: number;
+    categorySlug?: string; // ✅ Замість categoryId тепер використовуємо slug
+    subCategorySlug?: string;
     products?: IProductItem[]; // Додаємо цей рядок
   }
-  
+
+  export interface ProductFilterProps {
+    products: IProductItem[];
+    selectedManufacturers: string[];
+    setSelectedManufacturers: React.Dispatch<React.SetStateAction<string[]>>; // <-- важливо!
+    selectedQuantities: number[];
+    setSelectedQuantities: React.Dispatch<React.SetStateAction<number[]>>; // <-- важливо!
+  }

@@ -1,4 +1,4 @@
-import {Route, Routes} from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import CategoryCreatePage from "./components/admin/category/create/index.tsx";
 import CategoryEditPage from "./components/admin/category/edit/index.tsx";
 import AdminLayout from "./components/admin/containers/adminLayout.tsx";
@@ -55,13 +55,13 @@ export default function App() {
                         <Route path="subcategories/create" element={<SubCategoryCreatePage />} />
                         <Route path="subcategories/edit/:id" element={<SubCategoryEditPage />} />
                         <Route path="subcategories/view/:id" element={<SubCategoryViewPage />} />
-                
+
                         {/* PRODUCTS */}
                         <Route path={"products"}>
-                        <Route index element={<ProductListPage />} />
-                        <Route path="create" element={<ProductCreatePage />} />
-                        <Route path="edit/:id" element={<ProductEditPage />} />
-                        <Route path="/admin/products/view/:id" element={<ProductViewPage />} />
+                            <Route index element={<ProductListPage />} />
+                            <Route path="create" element={<ProductCreatePage />} />
+                            <Route path="edit/:id" element={<ProductEditPage />} />
+                            <Route path="/admin/products/view/:id" element={<ProductViewPage />} />
                         </Route>
 
                         {/* USERS */}
@@ -69,15 +69,15 @@ export default function App() {
                         <Route path="admins" element={<AdminsList />} />
 
                         {/* ORDERS */}
-                        <Route path="orders" element={<AdminOrders />}/>
+                        <Route path="orders" element={<AdminOrders />} />
                     </Route>
                 </Route>
 
                 {/* Layout для клієнтів */}
                 <Route path="/" element={<ClientLayout />}>
                     <Route index element={<HomePage />} />
-                    <Route path="/category/:id" element={<CategoryPage />} />
-                    <Route path="/subcategory/:id/products" element={<ProductsPage />} />
+                    {/* <Route path="/category/:id" element={<CategoryPage />} />
+                    <Route path="/subcategory/:id/products" element={<ProductsPage />} /> */}
                     <Route path="login" element={<LoginPage />} />
                     <Route path="register" element={<RegisterPage />} />
                     <Route path="profile" element={<ProfilePage />} />
@@ -88,9 +88,12 @@ export default function App() {
                     <Route path="about" element={<AboutPage />} />
                     <Route path="contact" element={<ContactsPage />} />
                     <Route path="pricing-policy" element={<PricingPolicyPage />} />
-                    <Route path="/product/:id" element={<ProductPage />}/>
+                    {/* <Route path="/product/:id" element={<ProductPage />}/> */}
                     <Route path="/subcategory/:id/products" element={<CategoryPage />} />
                     <Route path="/wishlist" element={<WishListPage />} />
+                    <Route path="/category/:slug" element={<CategoryPage />} />
+                    <Route path="/subcategory/:slug/products" element={<ProductsPage />} />
+                    <Route path="/product/:slug" element={<ProductPage />} />
                 </Route>
                 {/* Сторінка 404 */}
                 <Route path="*" element={<h1>Сторінка не знайдена</h1>} />

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { useGetCategoriesQuery, useGetSubCategoriesByCategoryIdQuery } from "../../../services/categoryApi";
 import Footer from "./Footer";
 import { FaSearch, FaSignInAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +7,8 @@ import { RootState } from "../../../store";
 import { clearCart } from "../../../interfaces/cart/cartSlice";
 import Logo from "../../../assets/logo.png";
 import { useGetProductsByNameQuery } from "../../../services/productApi";
+import { useGetCategoriesQuery } from "../../../services/categoryApi";
+import { useGetSubCategoriesByCategoryIdQuery } from "../../../services/subcategoryApi";
 
 
 const ClientLayout = () => {
@@ -137,7 +138,7 @@ const ClientLayout = () => {
             }`}
             onMouseEnter={() => handleCategoryHover(category.id)}
             onClick={() => {
-              navigate(`/category/${category.id}`);
+              navigate(`/category/${category.slug}`);
               setIsMenuOpen(false); // Закриває меню після натискання
             }}
           >
@@ -160,7 +161,7 @@ const ClientLayout = () => {
           {filteredSubCategories.map((subCategory) => (
             <li key={subCategory.id}>
               <Link
-                to={`/subcategory/${subCategory.id}/products`}
+                to={`/subcategory/${subCategory.slug}/products`}
                 className="text-gray-800 hover:text-gray-500 transition-all"
                 onClick={() => {
                   setIsMenuOpen(false); // Закриває меню після натискання

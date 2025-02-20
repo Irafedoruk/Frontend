@@ -1,26 +1,32 @@
 import { Link, useParams } from "react-router-dom";
-import { useGetProductsByCategoryIdQuery } from "../../../services/productApi";
+import { useGetProductsByCategorySlugQuery } from "../../../services/productApi";
 import CategorySidebar from "./CategorySidebar";
 import { API_URL } from "../../../env";
 import { ISubCategoryItem } from "../../../interfaces/subcategory";
-import { useGetCategoryQuery } from "../../../services/categoryApi";
-import { useGetSubCategoriesByCategoryIdQuery } from "../../../services/categoryApi";
+import { useGetCategoryBySlugQuery } from "../../../services/categoryApi";
+
+import { useGetSubCategoriesByCategorySlugQuery } from "../../../services/categoryApi";
 import ProductsPage from "./ProductsPage";
 import { useState, useEffect } from "react";
 import ProductFilter from "./ProductFilter";
 
 const CategoryPage = () => {
-  const { id } = useParams();
-  const [categoryId, setCategoryId] = useState<number>(Number(id));
+  const { slug } = useParams<{ slug?: string }>();
+
+const { data: category } = slug
+  ? useGetCategoryBySlugQuery(slug) // Виконує запит, якщо slug існує
+  : { data: null }; // В іншому випадку category = null
+  const [categoryId, setCategoryId] = useState<number | null>(null);
 
   useEffect(() => {
-    setCategoryId(Number(id)); // Оновлюємо categoryId при зміні URL
-  }, [id]);
+    if (category) setCategoryId(category.id); // ✅ Встановлюємо categoryId після отримання категорії
+  }, [category]);
 
-  const { data: category } = useGetCategoryQuery(categoryId);
-  const { data: subCategories, isLoading: subCategoriesLoading } = useGetSubCategoriesByCategoryIdQuery(categoryId);
-  const { data: products, isLoading: productsLoading } = useGetProductsByCategoryIdQuery(categoryId);
-
+  
+  const { data: subCategories, isLoading: subCategoriesLoading } = useGetSubCategoriesByCategorySlugQuery(categoryId);
+  const { data: products, isLoading: productsLoading } = slug
+  ? useGetProductsByCategorySlugQuery(slug)
+  : { data: [], isLoading: false };
   const [selectedManufacturers, setSelectedManufacturers] = useState<string[]>([]);
   const [selectedQuantities, setSelectedQuantities] = useState<number[]>([]);
 
@@ -76,7 +82,8 @@ const CategoryPage = () => {
           )}
 
           <h1 className="text-2xl font-bold mt-8 mb-4">Продукти</h1>
-          <ProductsPage categoryId={categoryId} />
+          <ProductsPage categorySlug={category?.slug} />
+
         </div>
       </div>
     </div>
