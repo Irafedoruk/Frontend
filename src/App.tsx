@@ -89,10 +89,10 @@ export default function App() {
                     <Route path="contact" element={<ContactsPage />} />
                     <Route path="pricing-policy" element={<PricingPolicyPage />} />
                     {/* <Route path="/product/:id" element={<ProductPage />}/> */}
-                    <Route path="/subcategory/:id/products" element={<CategoryPage />} />
+                    {/* <Route path="/subcategory/:id/products" element={<CategoryPage />} /> */}
                     <Route path="/wishlist" element={<WishListPage />} />
                     <Route path="/category/:slug" element={<CategoryPage />} />
-                    <Route path="/subcategory/:slug/products" element={<ProductsPage />} />
+                    <Route path="/subcategory/products/:subslug" element={<ProductsPage />} />
                     <Route path="/product/:slug" element={<ProductPage />} />
                 </Route>
                 {/* Сторінка 404 */}

@@ -31,7 +31,7 @@ export const productApi = createApi({
             query: (slug) => `/category/slug/${slug}/products`, // ✅ Отримання продуктів категорії за SLUG
         }),
         getProductsBySubCategoryId: builder.query<IProductItem[], number>({
-            query: (id) => `/subcategory/${id}/products`,
+            query: (id) => `/products/bySubCategory/${id}`,
         }),
         getProductsBySubCategorySlug: builder.query<IProductItem[], string>({
             query: (slug) => `/subcategory/slug/${slug}/products`, // ✅ Отримання продуктів підкатегорії за SLUG

@@ -27,6 +27,7 @@ const { data: category } = slug
   const { data: products, isLoading: productsLoading } = slug
   ? useGetProductsByCategorySlugQuery(slug)
   : { data: [], isLoading: false };
+  console.log("categoryPage,useGetProductsByCategorySlugQuery",slug);
   const [selectedManufacturers, setSelectedManufacturers] = useState<string[]>([]);
   const [selectedQuantities, setSelectedQuantities] = useState<number[]>([]);
 
@@ -71,7 +72,7 @@ const { data: category } = slug
                 <li key={sub.id} className="bg-white p-4 shadow-md rounded-lg">
                   <img src={`${API_URL}/images/300_${sub.imageSubCategory}`} alt={sub.name} className="w-full h-40 object-cover rounded-t-lg" />
                   <h2 className="text-lg font-semibold mt-2">{sub.name}</h2>
-                  <Link to={`/subcategory/${sub.id}/products`} className="text-blue-500 hover:underline mt-2 block">
+                  <Link to={`/subcategory/products/${sub.slug}`} className="text-blue-500 hover:underline mt-2 block">
                     Переглянути продукти
                   </Link>
                 </li>
