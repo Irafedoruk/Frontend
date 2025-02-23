@@ -28,21 +28,7 @@ const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySl
     const { data: products = [], isLoading } = categoryId
       ? useGetProductsByCategoryIdQuery(categoryId, { skip: !categoryId })
       : useGetProductsBySubCategoryIdQuery(subCategoryId ?? 0, { skip: !subCategoryId });
-    //   const ProductsPage: React.FC<ProductsPageProps> = ({ categorySlug, subCategorySlug }) => {
-    //     const { slug, subslug } = useParams<{ slug?: number,subslag?:string }>();
-    //     console.log("Slug",slug);
-    //     console.log("SubSlug",subslug);
-    //     const location = useLocation();
-     
-    //     const { data: category } = useGetCategoryBySlugQuery(slug ?? "", { skip: !slug });
-    //     const { data: subCategory } = useGetSubCategoryBySlugQuery(slug ?? "", { skip: !slug });
-      
-    //     const categoryId = category?.id ?? null;
-    //     const subCategoryId = subCategory?.id ?? null;
-        
-    //     const { data: products = [], isLoading } = slug
-    //       ? useGetProductsByCategoryIdQuery(slug)
-    //       : useGetProductsBySubCategorySlugQuery(subslug);   
+  
 // const ProductsPage: React.FC<ProductsPageProps> = ({ categoryId, subCategoryId }) => {
 //   const { id } = useParams();
 //   const subId = subCategoryId || Number(id);

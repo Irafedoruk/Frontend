@@ -71,7 +71,7 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({ onCategoryChange }) =
                   .map((sub: ISubCategoryItem) => (
                     <li key={sub.id} className="mt-1">
                       <Link
-                        to={`/subcategory/${sub.slug}/products`} 
+                        to={`/subcategory/products/${sub.slug}`}
                         className="text-yellow-200 hover:text-yellow-400"
                       >
                         {sub.name}
